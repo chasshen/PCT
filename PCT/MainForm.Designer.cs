@@ -28,14 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.menu1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.menu11 = new System.Windows.Forms.ToolStripMenuItem();
-            this.menu12 = new System.Windows.Forms.ToolStripMenuItem();
-            this.menu13 = new System.Windows.Forms.ToolStripMenuItem();
-            this.menu14 = new System.Windows.Forms.ToolStripMenuItem();
-            this.menu15 = new System.Windows.Forms.ToolStripMenuItem();
-            this.menu16 = new System.Windows.Forms.ToolStripMenuItem();
+            this.menu2 = new System.Windows.Forms.ToolStripMenuItem();
             this.pnBtns = new System.Windows.Forms.Panel();
             this.btnExit = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
@@ -43,73 +41,39 @@
             this.btnToZero = new System.Windows.Forms.Button();
             this.btnStart = new System.Windows.Forms.Button();
             this.pnInfo = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.chartLine = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.cmbSensor = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.timeReadData = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.pnBtns.SuspendLayout();
+            this.pnInfo.SuspendLayout();
+            this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartLine)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menu1});
+            this.menu2});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1076, 25);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // menu1
+            // menu2
             // 
-            this.menu1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menu11,
-            this.menu12,
-            this.menu13,
-            this.menu14,
-            this.menu15,
-            this.menu16});
-            this.menu1.Name = "menu1";
-            this.menu1.Size = new System.Drawing.Size(56, 21);
-            this.menu1.Text = "传感器";
-            // 
-            // menu11
-            // 
-            this.menu11.Name = "menu11";
-            this.menu11.Size = new System.Drawing.Size(172, 22);
-            this.menu11.Text = "CO/He";
-            // 
-            // menu12
-            // 
-            this.menu12.Name = "menu12";
-            this.menu12.Size = new System.Drawing.Size(172, 22);
-            this.menu12.Text = "CO/CH4/C2H2";
-            // 
-            // menu13
-            // 
-            this.menu13.Name = "menu13";
-            this.menu13.Size = new System.Drawing.Size(172, 22);
-            this.menu13.Text = "O2/CO2";
-            // 
-            // menu14
-            // 
-            this.menu14.Name = "menu14";
-            this.menu14.Size = new System.Drawing.Size(172, 22);
-            this.menu14.Text = "箱压PB";
-            // 
-            // menu15
-            // 
-            this.menu15.Name = "menu15";
-            this.menu15.Size = new System.Drawing.Size(172, 22);
-            this.menu15.Text = "口压PM";
-            // 
-            // menu16
-            // 
-            this.menu16.Name = "menu16";
-            this.menu16.Size = new System.Drawing.Size(172, 22);
-            this.menu16.Text = "环境参数Ambient";
-            this.menu16.Click += new System.EventHandler(this.menu16_Click);
+            this.menu2.Name = "menu2";
+            this.menu2.Size = new System.Drawing.Size(68, 21);
+            this.menu2.Text = "参数设置";
+            this.menu2.Click += new System.EventHandler(this.menu2_Click);
             // 
             // pnBtns
             // 
-            this.pnBtns.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnBtns.Controls.Add(this.btnExit);
             this.pnBtns.Controls.Add(this.btnStop);
             this.pnBtns.Controls.Add(this.btnAddMore);
@@ -138,6 +102,7 @@
             this.btnStop.TabIndex = 3;
             this.btnStop.Text = "停止";
             this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
             // btnAddMore
             // 
@@ -156,6 +121,7 @@
             this.btnToZero.TabIndex = 1;
             this.btnToZero.Text = "校零";
             this.btnToZero.UseVisualStyleBackColor = true;
+            this.btnToZero.Click += new System.EventHandler(this.btnToZero_Click);
             // 
             // btnStart
             // 
@@ -165,14 +131,93 @@
             this.btnStart.TabIndex = 0;
             this.btnStart.Text = "开始";
             this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // pnInfo
             // 
+            this.pnInfo.Controls.Add(this.panel2);
+            this.pnInfo.Controls.Add(this.panel1);
             this.pnInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnInfo.Location = new System.Drawing.Point(0, 25);
             this.pnInfo.Name = "pnInfo";
             this.pnInfo.Size = new System.Drawing.Size(960, 352);
             this.pnInfo.TabIndex = 2;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.chartLine);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(0, 40);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(960, 312);
+            this.panel2.TabIndex = 1;
+            // 
+            // chartLine
+            // 
+            chartArea1.AxisX.Interval = 1D;
+            chartArea1.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea1.AxisX.LineColor = System.Drawing.Color.Transparent;
+            chartArea1.AxisX.Maximum = 30D;
+            chartArea1.AxisX.Minimum = 1D;
+            chartArea1.AxisX.Title = "Time";
+            chartArea1.AxisY.Maximum = 65536D;
+            chartArea1.AxisY.Title = "digit";
+            chartArea1.Name = "ChartArea1";
+            this.chartLine.ChartAreas.Add(chartArea1);
+            this.chartLine.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            legend1.IsTextAutoFit = false;
+            legend1.Name = "Legend1";
+            this.chartLine.Legends.Add(legend1);
+            this.chartLine.Location = new System.Drawing.Point(0, 0);
+            this.chartLine.Name = "chartLine";
+            series1.ChartArea = "ChartArea1";
+            series1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chartLine.Series.Add(series1);
+            this.chartLine.Size = new System.Drawing.Size(960, 312);
+            this.chartLine.TabIndex = 0;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.cmbSensor);
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(960, 40);
+            this.panel1.TabIndex = 0;
+            // 
+            // cmbSensor
+            // 
+            this.cmbSensor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSensor.FormattingEnabled = true;
+            this.cmbSensor.Items.AddRange(new object[] {
+            "CO/He",
+            "CO/CH4/C2H2",
+            "O2/CO2",
+            "箱压PB",
+            "口压PM",
+            "环境参数Ambient"});
+            this.cmbSensor.Location = new System.Drawing.Point(59, 9);
+            this.cmbSensor.Name = "cmbSensor";
+            this.cmbSensor.Size = new System.Drawing.Size(121, 20);
+            this.cmbSensor.TabIndex = 1;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 13);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(41, 12);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "传感器";
+            // 
+            // timeReadData
+            // 
+            this.timeReadData.Interval = 1000;
+            this.timeReadData.Tick += new System.EventHandler(this.timeReadData_Tick);
             // 
             // MainForm
             // 
@@ -189,6 +234,11 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.pnBtns.ResumeLayout(false);
+            this.pnInfo.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chartLine)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -197,13 +247,6 @@
         #endregion
 
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem menu1;
-        private System.Windows.Forms.ToolStripMenuItem menu11;
-        private System.Windows.Forms.ToolStripMenuItem menu12;
-        private System.Windows.Forms.ToolStripMenuItem menu13;
-        private System.Windows.Forms.ToolStripMenuItem menu14;
-        private System.Windows.Forms.ToolStripMenuItem menu15;
-        private System.Windows.Forms.ToolStripMenuItem menu16;
         private System.Windows.Forms.Panel pnBtns;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Panel pnInfo;
@@ -211,6 +254,13 @@
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnAddMore;
         private System.Windows.Forms.Button btnToZero;
+        private System.Windows.Forms.ToolStripMenuItem menu2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartLine;
+        private System.Windows.Forms.ComboBox cmbSensor;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Timer timeReadData;
     }
 }
 

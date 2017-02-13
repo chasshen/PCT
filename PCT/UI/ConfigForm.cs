@@ -45,14 +45,23 @@ namespace PCT.UI
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            Configuration cfa = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            cfa.AppSettings.Settings["Port"].Value = "111";
-            cfa.AppSettings.Settings["BaudRates"].Value = cmbBaudRates.SelectedItem.ToString();
-            cfa.AppSettings.Settings["Databits"].Value = cmbDatabits.SelectedItem.ToString();
-            cfa.AppSettings.Settings["Parity"].Value = cmbParity.SelectedItem.ToString();
-            cfa.AppSettings.Settings["StopBits"].Value = cmbStopBits.SelectedItem.ToString();
-            cfa.Save(ConfigurationSaveMode.Modified);
-            System.Configuration.ConfigurationManager.RefreshSection("appSettings");
+            try
+            {
+                Configuration cfa = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                cfa.AppSettings.Settings["Port"].Value = "111";
+                cfa.AppSettings.Settings["BaudRates"].Value = cmbBaudRates.SelectedItem.ToString();
+                cfa.AppSettings.Settings["Databits"].Value = cmbDatabits.SelectedItem.ToString();
+                cfa.AppSettings.Settings["Parity"].Value = cmbParity.SelectedItem.ToString();
+                cfa.AppSettings.Settings["StopBits"].Value = cmbStopBits.SelectedItem.ToString();
+                cfa.Save(ConfigurationSaveMode.Modified);
+                System.Configuration.ConfigurationManager.RefreshSection("appSettings");
+                MessageBox.Show("保存成功！");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("保存失败！" + ex.ToString());
+            }
+            
         }
     }
 }
