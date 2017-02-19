@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Configuration;
+using PCT.Common;
 
 namespace PCT.UI
 {
@@ -48,7 +49,7 @@ namespace PCT.UI
             try
             {
                 Configuration cfa = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                cfa.AppSettings.Settings["Port"].Value = "111";
+                cfa.AppSettings.Settings["Port"].Value = cmbPort.SelectedItem.ToString();
                 cfa.AppSettings.Settings["BaudRates"].Value = cmbBaudRates.SelectedItem.ToString();
                 cfa.AppSettings.Settings["Databits"].Value = cmbDatabits.SelectedItem.ToString();
                 cfa.AppSettings.Settings["Parity"].Value = cmbParity.SelectedItem.ToString();

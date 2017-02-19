@@ -4,7 +4,7 @@ using System.Text;
 using System.IO.Ports;
 using System.Windows.Forms;
 
-namespace PCT
+namespace PCT.Common
 {
     /// <summary>
     /// 串口开发辅助类
@@ -82,6 +82,11 @@ namespace PCT
 
         #endregion
 
+        public SerialPort ComPortInstance
+        {
+           get { return comPort; }
+        }
+
         #region 构造函数
 
         /// <summary>
@@ -100,8 +105,8 @@ namespace PCT
             _dataBits = dBits;
             _stopBits = sBits;
 
-            comPort.DataReceived += new SerialDataReceivedEventHandler(comPort_DataReceived);
-            comPort.ErrorReceived += new SerialErrorReceivedEventHandler(comPort_ErrorReceived);
+            //comPort.DataReceived += new SerialDataReceivedEventHandler(comPort_DataReceived);
+            //comPort.ErrorReceived += new SerialErrorReceivedEventHandler(comPort_ErrorReceived);
         }
 
         /// <summary>
@@ -120,8 +125,8 @@ namespace PCT
             _dataBits = (SerialPortDatabits)Enum.Parse(typeof(SerialPortDatabits), dBits);
             _stopBits = (StopBits)Enum.Parse(typeof(StopBits), sBits);
 
-            comPort.DataReceived += new SerialDataReceivedEventHandler(comPort_DataReceived);
-            comPort.ErrorReceived += new SerialErrorReceivedEventHandler(comPort_ErrorReceived);
+            //comPort.DataReceived += new SerialDataReceivedEventHandler(comPort_DataReceived);
+            //comPort.ErrorReceived += new SerialErrorReceivedEventHandler(comPort_ErrorReceived);
         }
 
         /// <summary>
@@ -135,8 +140,8 @@ namespace PCT
             _dataBits = SerialPortDatabits.EightBits;
             _stopBits = StopBits.One;
 
-            comPort.DataReceived += new SerialDataReceivedEventHandler(comPort_DataReceived);
-            comPort.ErrorReceived += new SerialErrorReceivedEventHandler(comPort_ErrorReceived);
+            //comPort.DataReceived += new SerialDataReceivedEventHandler(comPort_DataReceived);
+            //comPort.ErrorReceived += new SerialErrorReceivedEventHandler(comPort_ErrorReceived);
         } 
 
 	    #endregion
@@ -184,6 +189,32 @@ namespace PCT
         {
             comPort.DiscardInBuffer();
             comPort.DiscardOutBuffer();
+        }
+
+        public List<byte> GetPortData()
+        {
+            //禁止接收事件时直接退出
+            if (ReceiveEventFlag) return null;
+
+            #region 根据结束字节来判断是否全部获取完成
+            List<byte> _byteData = new List<byte>();
+            bool found = false;//是否检测到结束符号
+            while (comPort.BytesToRead > 0 || !found)
+            {
+                byte[] readBuffer = new byte[comPort.ReadBufferSize + 1];
+                int count = comPort.Read(readBuffer, 0, comPort.ReadBufferSize);
+                for (int i = 0; i < count; i++)
+                {
+                    _byteData.Add(readBuffer[i]);
+
+                    if (readBuffer[i] == EndByte)
+                    {
+                        found = true;
+                    }
+                }
+            }
+            return _byteData;
+            #endregion
         }
 
         /// <summary>

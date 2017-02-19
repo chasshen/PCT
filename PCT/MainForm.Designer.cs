@@ -157,10 +157,7 @@
             chartArea1.AxisX.Interval = 1D;
             chartArea1.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
             chartArea1.AxisX.LineColor = System.Drawing.Color.Transparent;
-            chartArea1.AxisX.Maximum = 30D;
-            chartArea1.AxisX.Minimum = 1D;
             chartArea1.AxisX.Title = "Time";
-            chartArea1.AxisY.Maximum = 65536D;
             chartArea1.AxisY.Title = "digit";
             chartArea1.Name = "ChartArea1";
             this.chartLine.ChartAreas.Add(chartArea1);

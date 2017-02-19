@@ -11,12 +11,15 @@ using System.Threading;
 using PCT.UI;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Collections;
+using PCT.Common.Channels;
 
 namespace PCT
 {
     public partial class MainForm : Form
     {
         private List<ArrayList> lsWatchData;
+        private Thread threadReadData;
+
         public MainForm()
         {
             InitializeComponent();
@@ -42,10 +45,51 @@ namespace PCT
             }
         }
 
+        private IChannel cflow;
+
         private void RunDrawLine()
         {
             lsWatchData = InitWatchDataList();
-            timeReadData.Enabled = true;
+            threadReadData = new Thread(new ThreadStart(receivePortData));
+            threadReadData.Start();
+
+            //cflow = new ChannelFlow();
+            //cflow.getSerialPort().DataReceived += drawLine;
+            //cflow.start();
+            //timeReadData.Enabled = true;
+        }
+
+        private void receivePortData()
+        {
+            ChannelBase channel = new ChannelFlow();
+            channel.DataReceived += Channel_DataReceived;
+            channel.start();
+        }
+
+        private void Channel_DataReceived(ChannelBase.DataReceivedEventArgs e)
+        {
+            this.Invoke(new MethodInvoker(delegate { this.DrawData(e.DataReceived); }));
+        }
+
+        private void DrawData(int[] data)
+        {
+            for (int i = 0; i < lsWatchData.Count; i++)
+            {
+                if (lsWatchData[i].Count == 30)
+                {
+                    lsWatchData[i].RemoveAt(0);
+
+                }
+                lsWatchData[i].Add(data[1]);
+            }
+            for (int i = 0; i < lsWatchData.Count; i++)
+            {
+                chartLine.Series[i].Points.Clear();
+                for (int j = 0; j < lsWatchData[i].Count; j++)
+                {
+                    chartLine.Series[i].Points.AddXY(j + 1, lsWatchData[i][j]);
+                }
+            }
         }
 
         private List<ArrayList> InitWatchDataList()
@@ -63,6 +107,27 @@ namespace PCT
             }
             return rtn;
         }
+
+        private void drawLine()
+        {
+            //for (int i = 0; i < lsWatchData.Count; i++)
+            //{
+            //    if (lsWatchData[i].Count == 30)
+            //    {
+            //        lsWatchData[i].RemoveAt(0);
+
+            //    }
+            //    lsWatchData[i].Add(e.DataReceived);
+            //}
+            //for (int i = 0; i < lsWatchData.Count; i++)
+            //{
+            //    chartLine.Series[i].Points.Clear();
+            //    for (int j = 0; j < lsWatchData[i].Count; j++)
+            //    {
+            //        chartLine.Series[i].Points.AddXY(j + 1, lsWatchData[i][j]);
+            //    }
+            //}
+        }        
 
         private void InitChart()
         {
@@ -122,6 +187,8 @@ namespace PCT
         {
             cmbSensor.Enabled = true;
             timeReadData.Enabled = false;
+            cflow.stop();
+            threadReadData.Abort();
         }
 
         private String[] getSensor()

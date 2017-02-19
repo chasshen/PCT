@@ -48,6 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Channels\ChannelBase.cs" />
+    <Compile Include="Common\Channels\ChannelFlow.cs" />
+    <Compile Include="Common\Channels\IChannel.cs" />
     <Compile Include="Common\SerialPortUtil.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
