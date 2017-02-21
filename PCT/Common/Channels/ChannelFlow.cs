@@ -19,11 +19,12 @@ namespace PCT.Common.Channels
         public override void comPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             List<byte> _byteData = base.serialportutil.GetPortData();
-            //if (SerialPortUtil.ByteToHex(_byteData.Take(6).ToArray()).Equals(_cmdstart))
-            //{
-            //    _byteData.RemoveRange(0, 6);
-            //}
-            if(isStopData(_byteData) == false)
+
+            System.IO.StreamWriter sw = new System.IO.StreamWriter("d:\\sc22.txt", true);
+            sw.WriteLine(string.Format("{0}\t{1}", System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss fff"), SerialPortUtil.ByteToHex(_byteData.ToArray())));
+            sw.Close();
+
+            if (isStopData(_byteData) == false)
             {
                 _pointdata[0] = GetPointTime(_byteData);
                 _pointdata[1] = GetPointData(_byteData);
@@ -38,7 +39,8 @@ namespace PCT.Common.Channels
             {
                 _bytetime[i] = _byteData[_byteData.Count - 9 + i];
             }
-            return int.Parse(SerialPortUtil.ByteToHex(_bytetime).Replace(" ",""), NumberStyles.HexNumber)/100;//BitConverter.ToInt32(_bytetime, 0) / 100;
+            return int.Parse(SerialPortUtil.ByteToHex(_bytetime).Replace(" ",""), NumberStyles.HexNumber)/100;
+            //BitConverter.ToInt32(_bytetime, 0) / 100;
         }
 
         public override int GetPointData(List<byte> _byteData)
@@ -48,7 +50,8 @@ namespace PCT.Common.Channels
             {
                 _pointdata[i] = _byteData[_byteData.Count - 5 + i];
             }
-            return int.Parse(SerialPortUtil.ByteToHex(_pointdata).Replace(" ", ""), NumberStyles.HexNumber);//BitConverter.ToInt32(_pointdata, 0);
+            return int.Parse(SerialPortUtil.ByteToHex(_pointdata).Replace(" ", ""), NumberStyles.HexNumber);
+            //BitConverter.ToInt32(_pointdata, 0);
         }
 
         public override void comPort_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)

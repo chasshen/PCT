@@ -11,14 +11,15 @@ using System.Threading;
 using PCT.UI;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Collections;
+using PCT.Common;
 using PCT.Common.Channels;
 
 namespace PCT
 {
-    public partial class MainForm : Form
+    public partial class MainForm : Form, IView
     {
+        private ComController controller;
         private List<ArrayList> lsWatchData;
-        private Thread threadReadData;
 
         public MainForm()
         {
@@ -39,9 +40,12 @@ namespace PCT
                 MessageBox.Show("请选定一个传感器！");
             }else
             {
-                cmbSensor.Enabled = false;
-                InitChart();
-                RunDrawLine();
+                ComConfigVO ccvo = new ComConfigVO();
+                controller.OpenSerialPort(ccvo.Port, ccvo.BaudRates,
+                    ccvo.Databits, ccvo.StopBits, ccvo.Parity,
+                    "None");
+                Byte[] bytes = ComController.Hex2Bytes("F8-00-00-01-01-54");
+                controller.SendDataToCom(bytes);
             }
         }
 
@@ -50,25 +54,6 @@ namespace PCT
         private void RunDrawLine()
         {
             lsWatchData = InitWatchDataList();
-            threadReadData = new Thread(new ThreadStart(receivePortData));
-            threadReadData.Start();
-
-            //cflow = new ChannelFlow();
-            //cflow.getSerialPort().DataReceived += drawLine;
-            //cflow.start();
-            //timeReadData.Enabled = true;
-        }
-
-        private void receivePortData()
-        {
-            ChannelBase channel = new ChannelFlow();
-            channel.DataReceived += Channel_DataReceived;
-            channel.start();
-        }
-
-        private void Channel_DataReceived(ChannelBase.DataReceivedEventArgs e)
-        {
-            this.Invoke(new MethodInvoker(delegate { this.DrawData(e.DataReceived); }));
         }
 
         private void DrawData(int[] data)
@@ -80,14 +65,15 @@ namespace PCT
                     lsWatchData[i].RemoveAt(0);
 
                 }
-                lsWatchData[i].Add(data[1]);
+                lsWatchData[i].Add(data);
             }
             for (int i = 0; i < lsWatchData.Count; i++)
             {
                 chartLine.Series[i].Points.Clear();
                 for (int j = 0; j < lsWatchData[i].Count; j++)
                 {
-                    chartLine.Series[i].Points.AddXY(j + 1, lsWatchData[i][j]);
+                    int[] tempdata = (int[])lsWatchData[i][j];
+                    chartLine.Series[i].Points.AddXY(tempdata[0], tempdata[1]);
                 }
             }
         }
@@ -99,36 +85,16 @@ namespace PCT
             for (int i = 0; i < lsSeries.Length; i++)
             {
                 ArrayList watchdata = new ArrayList();
-                //for(int j = 0; j < 31; j++)
-                //{
-                //    watchdata.Add(0.00);
-                //}
                 rtn.Add(watchdata);
             }
             return rtn;
         }
-
-        private void drawLine()
+        private String[] getSensor()
         {
-            //for (int i = 0; i < lsWatchData.Count; i++)
-            //{
-            //    if (lsWatchData[i].Count == 30)
-            //    {
-            //        lsWatchData[i].RemoveAt(0);
+            return cmbSensor.SelectedItem.ToString().Split('/');
+        }
 
-            //    }
-            //    lsWatchData[i].Add(e.DataReceived);
-            //}
-            //for (int i = 0; i < lsWatchData.Count; i++)
-            //{
-            //    chartLine.Series[i].Points.Clear();
-            //    for (int j = 0; j < lsWatchData[i].Count; j++)
-            //    {
-            //        chartLine.Series[i].Points.AddXY(j + 1, lsWatchData[i][j]);
-            //    }
-            //}
-        }        
-
+        #region Chart初始化
         private void InitChart()
         {
             chartLine.Series.Clear();
@@ -183,44 +149,13 @@ namespace PCT
             return series;
         }
 
+        #endregion
+
         private void btnStop_Click(object sender, EventArgs e)
         {
             cmbSensor.Enabled = true;
-            timeReadData.Enabled = false;
-            cflow.stop();
-            threadReadData.Abort();
-        }
-
-        private String[] getSensor()
-        {
-            return cmbSensor.SelectedItem.ToString().Split('/');
-        }
-
-        private void timeReadData_Tick(object sender, EventArgs e)
-        {
-            ReadDataFromPort();
-            for (int i = 0; i < lsWatchData.Count; i++)
-            {
-                chartLine.Series[i].Points.Clear();
-                for (int j = 0; j < lsWatchData[i].Count; j++)
-                {
-                    chartLine.Series[i].Points.AddXY(j + 1, lsWatchData[i][j]);
-                }
-            }
-        }
-
-        private void ReadDataFromPort()
-        {
-            for (int i = 0; i < lsWatchData.Count; i++)
-            {
-                if (lsWatchData[i].Count == 30)
-                {
-                    lsWatchData[i].RemoveAt(0);
-                    
-                }
-                lsWatchData[i].Add(System.DateTime.Now.Second * 1000 + 1000 * i);
-            }
-        }
+            controller.CloseSerialPort();
+        }        
 
         private void btnToZero_Click(object sender, EventArgs e)
         {
@@ -229,6 +164,50 @@ namespace PCT
             {
                 chartLine.Series[i].Name = lsSensor[i] + "：" + lsWatchData[i][(lsWatchData[i]).Count - 1].ToString() + "digits";
             }
+        }
+
+        public void SetController(ComController controller)
+        {
+            this.controller = controller;
+        }
+
+        public void OpenComEvent(object sender, SerialPortEventArgs e)
+        {
+            if (this.InvokeRequired)
+            {
+                Invoke(new Action<Object, SerialPortEventArgs>(OpenComEvent), sender, e);
+                return;
+            }
+        }
+
+        public void CloseComEvent(object sender, SerialPortEventArgs e)
+        {
+            if (this.InvokeRequired)
+            {
+                Invoke(new Action<Object, SerialPortEventArgs>(CloseComEvent), sender, e);
+                return;
+            }
+        }
+
+        public void ComReceiveDataEvent(object sender, SerialPortEventArgs e)
+        {
+            if (this.InvokeRequired)
+            {
+                try
+                {
+                    Invoke(new Action<Object, SerialPortEventArgs>(ComReceiveDataEvent), sender, e);
+                }
+                catch (System.Exception)
+                {
+                    //disable form destroy exception
+                }
+                return;
+            }
+
+            System.IO.StreamWriter sw = new System.IO.StreamWriter("d:\\sc66.txt", true);
+            sw.WriteLine(string.Format("{0}\t{1}", System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss fff"), SerialPortUtil.ByteToHex(e.receivedBytes)));
+            sw.Close();
+            
         }
     }
 }

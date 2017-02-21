@@ -79,7 +79,7 @@ namespace PCT.Common.Channels
         /// 数据接收处理
         /// </summary>
         public virtual void comPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
+        {            
             if (DataReceived != null)
             {
                 DataReceived(new DataReceivedEventArgs(_pointdata));

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using PCT.Common;
 
 namespace PCT
 {
@@ -16,7 +17,9 @@ namespace PCT
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            MainForm mainform = new MainForm();
+            ComController controller = new ComController(mainform);
+            Application.Run(mainform);
         }
     }
 }
