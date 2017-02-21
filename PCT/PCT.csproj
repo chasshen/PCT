@@ -49,7 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Channels\ChannelBase.cs" />
+    <Compile Include="Common\Channels\ChannelFactory.cs" />
     <Compile Include="Common\Channels\ChannelFlow.cs" />
+    <Compile Include="Common\Channels\ChannelType.cs" />
     <Compile Include="Common\Channels\IChannel.cs" />
     <Compile Include="Common\ComConfigVO.cs" />
     <Compile Include="Common\ComModel.cs" />

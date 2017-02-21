@@ -13,26 +13,26 @@ namespace PCT.Common.Channels
         private string _cmdstart = "F8 00 00 01 01 54";
         public ChannelFlow()
         {
-            base.setCmdStart(_cmdstart);
+            
         }
 
-        public override void comPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        public void comPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            List<byte> _byteData = base.serialportutil.GetPortData();
+            //List<byte> _byteData = base.serialportutil.GetPortData();
 
-            System.IO.StreamWriter sw = new System.IO.StreamWriter("d:\\sc22.txt", true);
-            sw.WriteLine(string.Format("{0}\t{1}", System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss fff"), SerialPortUtil.ByteToHex(_byteData.ToArray())));
-            sw.Close();
+            //System.IO.StreamWriter sw = new System.IO.StreamWriter("d:\\sc22.txt", true);
+            //sw.WriteLine(string.Format("{0}\t{1}", System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss fff"), SerialPortUtil.ByteToHex(_byteData.ToArray())));
+            //sw.Close();
 
-            if (isStopData(_byteData) == false)
-            {
-                _pointdata[0] = GetPointTime(_byteData);
-                _pointdata[1] = GetPointData(_byteData);
-            }
-            base.comPort_DataReceived(sender, e);
+            //if (isStopData(_byteData) == false)
+            //{
+            //    _pointdata[0] = GetPointTime(_byteData);
+            //    _pointdata[1] = GetPointData(_byteData);
+            //}
+            //base.comPort_DataReceived(sender, e);
         }
 
-        public override int GetPointTime(List<byte> _byteData)
+        public int GetPointTime(List<byte> _byteData)
         {
             byte[] _bytetime = new byte[4];
             for(int i = 0; i < _bytetime.Length; i++)
@@ -43,7 +43,7 @@ namespace PCT.Common.Channels
             //BitConverter.ToInt32(_bytetime, 0) / 100;
         }
 
-        public override int GetPointData(List<byte> _byteData)
+        public int GetPointData(List<byte> _byteData)
         {
             byte[] _pointdata = new byte[2];
             for (int i = 0; i < _pointdata.Length; i++)
@@ -54,9 +54,9 @@ namespace PCT.Common.Channels
             //BitConverter.ToInt32(_pointdata, 0);
         }
 
-        public override void comPort_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
+        public override string GetSendDataCmd()
         {
-
+            return "F8-00-00-01-01-54";
         }
     }
 }

@@ -199,6 +199,7 @@
             this.cmbSensor.Name = "cmbSensor";
             this.cmbSensor.Size = new System.Drawing.Size(121, 20);
             this.cmbSensor.TabIndex = 1;
+            this.cmbSensor.SelectedIndexChanged += new System.EventHandler(this.cmbSensor_SelectedIndexChanged);
             // 
             // label1
             // 

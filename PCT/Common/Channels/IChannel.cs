@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace PCT.Common.Channels
 {
-    interface IChannel
+    public interface IChannel
     {
-        void start();
-        void stop();
-        //SerialPortUtil getSerialPort();
+        String GetSendDataCmd();
+        String GetStandbyCmd();
     }
 }

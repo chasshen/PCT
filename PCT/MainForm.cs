@@ -19,6 +19,9 @@ namespace PCT
     public partial class MainForm : Form, IView
     {
         private ComController controller;
+        private IChannel channel = null;
+        private ChannelType channeltype = new ChannelType();
+
         private List<ArrayList> lsWatchData;
 
         public MainForm()
@@ -40,21 +43,31 @@ namespace PCT
                 MessageBox.Show("请选定一个传感器！");
             }else
             {
-                ComConfigVO ccvo = new ComConfigVO();
-                controller.OpenSerialPort(ccvo.Port, ccvo.BaudRates,
-                    ccvo.Databits, ccvo.StopBits, ccvo.Parity,
-                    "None");
-                Byte[] bytes = ComController.Hex2Bytes("F8-00-00-01-01-54");
-                controller.SendDataToCom(bytes);
+                if(channel != null)
+                {
+                    //画线初始化
+                    lsWatchData = InitWatchDataList();
+                    //com数据处理
+                    ComConfigVO ccvo = new ComConfigVO();
+                    controller.OpenSerialPort(ccvo.Port, ccvo.BaudRates,
+                        ccvo.Databits, ccvo.StopBits, ccvo.Parity,
+                        "None");
+                    Byte[] bytes = ComController.Hex2Bytes(channel.GetSendDataCmd());
+                    controller.SendDataToCom(bytes);
+                }
+                else
+                {
+                    MessageBox.Show("Channel实例为空，请重新选定一个传感器，或联系系统管理员处理。");
+                } 
             }
         }
 
-        private IChannel cflow;
+        //private IChannel cflow;
 
-        private void RunDrawLine()
-        {
-            lsWatchData = InitWatchDataList();
-        }
+        //private void RunDrawLine()
+        //{
+        //    lsWatchData = InitWatchDataList();
+        //}
 
         private void DrawData(int[] data)
         {
@@ -154,16 +167,18 @@ namespace PCT
         private void btnStop_Click(object sender, EventArgs e)
         {
             cmbSensor.Enabled = true;
+            Byte[] bytes = ComController.Hex2Bytes(channel.GetStandbyCmd());
+            controller.SendDataToCom(bytes);
             controller.CloseSerialPort();
         }        
 
         private void btnToZero_Click(object sender, EventArgs e)
         {
-            String[] lsSensor = getSensor();
-            for(int i = 0; i < lsSensor.Length; i++)
-            {
-                chartLine.Series[i].Name = lsSensor[i] + "：" + lsWatchData[i][(lsWatchData[i]).Count - 1].ToString() + "digits";
-            }
+            //String[] lsSensor = getSensor();
+            //for(int i = 0; i < lsSensor.Length; i++)
+            //{
+            //    chartLine.Series[i].Name = lsSensor[i] + "：" + lsWatchData[i][(lsWatchData[i]).Count - 1].ToString() + "digits";
+            //}
         }
 
         public void SetController(ComController controller)
@@ -208,6 +223,14 @@ namespace PCT
             sw.WriteLine(string.Format("{0}\t{1}", System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss fff"), SerialPortUtil.ByteToHex(e.receivedBytes)));
             sw.Close();
             
+        }
+
+        private void cmbSensor_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(cmbSensor.SelectedIndex > -1)
+            {
+                channel = ChannelFactory.CreateChannelInstance(channeltype.GetValueFromName(cmbSensor.SelectedItem.ToString()));
+            }
         }
     }
 }
