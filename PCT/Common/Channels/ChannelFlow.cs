@@ -14,7 +14,11 @@ namespace PCT.Common.Channels
         {
             isRealTime = false;
         }
-
+        protected override void InitTestObjects()
+        {
+            //ChannelTestObjectVO voFlow = new ChannelTestObjectVO();
+            //voFlow.ShowName = "Flow";
+        }
         public override string GetSendDataCmd()
         {
             return "F8-00-00-01-01-54";

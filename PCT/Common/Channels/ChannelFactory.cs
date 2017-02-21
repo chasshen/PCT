@@ -14,7 +14,7 @@ namespace PCT.Common.Channels
             switch (channeltype)
             {
                 case (int)ChannelType.ChannelValue.CoHe:
-                    channel = new ChannelFlow();
+                    channel = new ChannelCoHe();
                     break;
             }
             return channel;

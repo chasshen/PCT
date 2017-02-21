@@ -10,12 +10,16 @@ using System.Threading.Tasks;
 namespace PCT.Common.Channels
 {
     class ChannelBase : IChannel
-    {       
+    {
+        public List<ChannelTestObjectVO> testObjects = new List<ChannelTestObjectVO>();
         public ChannelBase()
         {
-            
+            InitTestObjects();
         }
-
+        protected virtual void InitTestObjects()
+        {
+            
+        }        
         public bool isRealTime { get; set; }
 
         public virtual List<ComDataVO> AnalyzeComData(byte[] bytedata)

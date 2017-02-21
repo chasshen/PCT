@@ -20,9 +20,10 @@ namespace PCT.Common.Channels
         }
 
         private static Hashtable channeltype = null;
+        //private static Hashtable channeltestobjects = null;
         public ChannelType()
         {
-            if(null == channeltype)
+            if (null == channeltype)
             {
                 channeltype = new Hashtable();
                 channeltype.Add("CO/He", ChannelValue.CoHe);
@@ -32,7 +33,16 @@ namespace PCT.Common.Channels
                 channeltype.Add("口压PM", ChannelValue.Pm);
                 channeltype.Add("环境参数Ambient", ChannelValue.Ambient);
             }
-            
+            //if (null == channeltestobjects)
+            //{
+            //    channeltestobjects = new Hashtable();
+            //    channeltestobjects.Add(ChannelValue.CoHe, new String[] { "CO", "He" });
+            //    channeltestobjects.Add(ChannelValue.CoCh4C2h2, new String[] { "CO", "CH4", "C2", "H2" });
+            //    channeltestobjects.Add(ChannelValue.O2Co2, new String[] { "O2", "CO2" });
+            //    channeltestobjects.Add(ChannelValue.Pb, new String[] { "PB" });
+            //    channeltestobjects.Add(ChannelValue.Pm, new String[] { "PM" });
+            //    channeltestobjects.Add(ChannelValue.Ambient, new String[] { "CO", "He" });
+            //}
         }
 
         public List<String> GetNames()
