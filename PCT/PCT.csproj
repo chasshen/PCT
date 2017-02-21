@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Nobi.StatusChart">
+      <HintPath>C:\Users\shencong\Desktop\StatusChartDemo\StatusChartDemo\bin\Debug\Nobi.StatusChart.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -49,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Channels\ChannelBase.cs" />
+    <Compile Include="Common\Channels\ComDataVO.cs" />
     <Compile Include="Common\Channels\ChannelFactory.cs" />
     <Compile Include="Common\Channels\ChannelFlow.cs" />
     <Compile Include="Common\Channels\ChannelType.cs" />

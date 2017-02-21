@@ -46,6 +46,7 @@ namespace PCT
                 if(channel != null)
                 {
                     //画线初始化
+                    InitChart();
                     lsWatchData = InitWatchDataList();
                     //com数据处理
                     ComConfigVO ccvo = new ComConfigVO();
@@ -53,7 +54,7 @@ namespace PCT
                         ccvo.Databits, ccvo.StopBits, ccvo.Parity,
                         "None");
                     Byte[] bytes = ComController.Hex2Bytes(channel.GetSendDataCmd());
-                    controller.SendDataToCom(bytes);
+                    controller.SendDataToCom(bytes);                    
                 }
                 else
                 {
@@ -62,33 +63,19 @@ namespace PCT
             }
         }
 
-        //private IChannel cflow;
-
-        //private void RunDrawLine()
-        //{
-        //    lsWatchData = InitWatchDataList();
-        //}
-
-        private void DrawData(int[] data)
+        private void AddPointData(List<ComDataVO> data)
         {
+            if (data.Count == 0) return;
             for (int i = 0; i < lsWatchData.Count; i++)
             {
-                if (lsWatchData[i].Count == 30)
+                if (lsWatchData[i].Count == 31)   //31 second
                 {
                     lsWatchData[i].RemoveAt(0);
 
                 }
-                lsWatchData[i].Add(data);
+                lsWatchData[i].Add(data[i]);
             }
-            for (int i = 0; i < lsWatchData.Count; i++)
-            {
-                chartLine.Series[i].Points.Clear();
-                for (int j = 0; j < lsWatchData[i].Count; j++)
-                {
-                    int[] tempdata = (int[])lsWatchData[i][j];
-                    chartLine.Series[i].Points.AddXY(tempdata[0], tempdata[1]);
-                }
-            }
+            backgroundWorker1.RunWorkerAsync();
         }
 
         private List<ArrayList> InitWatchDataList()
@@ -218,11 +205,18 @@ namespace PCT
                 }
                 return;
             }
+            byte[] tempbytes = e.receivedBytes;
+            List<ComDataVO> receivedata = channel.AnalyzeComData(tempbytes);
+            if(receivedata.Count>0)
+            {
+                AddPointData(receivedata);
+            }            
 
             System.IO.StreamWriter sw = new System.IO.StreamWriter("d:\\sc66.txt", true);
-            sw.WriteLine(string.Format("{0}\t{1}", System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss fff"), SerialPortUtil.ByteToHex(e.receivedBytes)));
+            sw.WriteLine(string.Format("{0}\t{1}\t【{2}】", System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss fff")
+                , SerialPortUtil.ByteToHex(tempbytes)
+                , receivedata.Count==2 ? receivedata[0].TimeValue+"-"+ receivedata[0].DataValue + "-" + receivedata[1].TimeValue + "-" + receivedata[1].DataValue : receivedata.Count.ToString()));
             sw.Close();
-            
         }
 
         private void cmbSensor_SelectedIndexChanged(object sender, EventArgs e)
@@ -230,6 +224,20 @@ namespace PCT
             if(cmbSensor.SelectedIndex > -1)
             {
                 channel = ChannelFactory.CreateChannelInstance(channeltype.GetValueFromName(cmbSensor.SelectedItem.ToString()));
+            }
+        }
+
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            for (int i = 0; i < lsWatchData.Count; i++)
+            {
+                chartLine.Series[i].Points.Clear();
+                int countdata = lsWatchData[i].Count;
+                for (int j = 0; j < countdata; j++)
+                {
+                    ComDataVO tempdata = (ComDataVO)lsWatchData[i][j];
+                    chartLine.Series[i].Points.AddXY(j, tempdata.DataValue);
+                }
             }
         }
     }

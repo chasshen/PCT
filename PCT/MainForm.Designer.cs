@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menu2 = new System.Windows.Forms.ToolStripMenuItem();
             this.pnBtns = new System.Windows.Forms.Panel();
@@ -45,6 +45,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.cmbSensor = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.menuStrip1.SuspendLayout();
             this.pnBtns.SuspendLayout();
             this.pnInfo.SuspendLayout();
@@ -152,25 +153,32 @@
             // 
             // chartLine
             // 
-            chartArea1.AxisX.Interval = 1D;
-            chartArea1.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea1.AxisX.LineColor = System.Drawing.Color.Transparent;
-            chartArea1.AxisX.Title = "Time";
-            chartArea1.AxisY.Title = "digit";
-            chartArea1.Name = "ChartArea1";
-            this.chartLine.ChartAreas.Add(chartArea1);
+            chartArea3.AxisX.Crossing = 0D;
+            chartArea3.AxisX.Interval = 1D;
+            chartArea3.AxisX.LineColor = System.Drawing.Color.Transparent;
+            chartArea3.AxisX.MajorGrid.LineWidth = 0;
+            chartArea3.AxisX.Maximum = 30D;
+            chartArea3.AxisX.Minimum = 0D;
+            chartArea3.AxisX.Title = "Time";
+            chartArea3.AxisY.Crossing = 0D;
+            chartArea3.AxisY.Interval = 100D;
+            chartArea3.AxisY.Maximum = 1000D;
+            chartArea3.AxisY.Minimum = 0D;
+            chartArea3.AxisY.Title = "digit";
+            chartArea3.Name = "ChartArea1";
+            this.chartLine.ChartAreas.Add(chartArea3);
             this.chartLine.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            legend1.IsTextAutoFit = false;
-            legend1.Name = "Legend1";
-            this.chartLine.Legends.Add(legend1);
+            legend3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            legend3.IsTextAutoFit = false;
+            legend3.Name = "Legend1";
+            this.chartLine.Legends.Add(legend3);
             this.chartLine.Location = new System.Drawing.Point(0, 0);
             this.chartLine.Name = "chartLine";
-            series1.ChartArea = "ChartArea1";
-            series1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chartLine.Series.Add(series1);
+            series3.ChartArea = "ChartArea1";
+            series3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            this.chartLine.Series.Add(series3);
             this.chartLine.Size = new System.Drawing.Size(960, 312);
             this.chartLine.TabIndex = 0;
             // 
@@ -209,6 +217,10 @@
             this.label1.Size = new System.Drawing.Size(41, 12);
             this.label1.TabIndex = 0;
             this.label1.Text = "传感器";
+            // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
             // MainForm
             // 
@@ -251,6 +263,7 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chartLine;
         private System.Windows.Forms.ComboBox cmbSensor;
         private System.Windows.Forms.Label label1;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
 

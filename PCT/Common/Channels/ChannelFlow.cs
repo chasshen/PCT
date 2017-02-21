@@ -10,53 +10,49 @@ namespace PCT.Common.Channels
 {
     class ChannelFlow : ChannelBase
     {
-        private string _cmdstart = "F8 00 00 01 01 54";
         public ChannelFlow()
         {
-            
-        }
-
-        public void comPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            //List<byte> _byteData = base.serialportutil.GetPortData();
-
-            //System.IO.StreamWriter sw = new System.IO.StreamWriter("d:\\sc22.txt", true);
-            //sw.WriteLine(string.Format("{0}\t{1}", System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss fff"), SerialPortUtil.ByteToHex(_byteData.ToArray())));
-            //sw.Close();
-
-            //if (isStopData(_byteData) == false)
-            //{
-            //    _pointdata[0] = GetPointTime(_byteData);
-            //    _pointdata[1] = GetPointData(_byteData);
-            //}
-            //base.comPort_DataReceived(sender, e);
-        }
-
-        public int GetPointTime(List<byte> _byteData)
-        {
-            byte[] _bytetime = new byte[4];
-            for(int i = 0; i < _bytetime.Length; i++)
-            {
-                _bytetime[i] = _byteData[_byteData.Count - 9 + i];
-            }
-            return int.Parse(SerialPortUtil.ByteToHex(_bytetime).Replace(" ",""), NumberStyles.HexNumber)/100;
-            //BitConverter.ToInt32(_bytetime, 0) / 100;
-        }
-
-        public int GetPointData(List<byte> _byteData)
-        {
-            byte[] _pointdata = new byte[2];
-            for (int i = 0; i < _pointdata.Length; i++)
-            {
-                _pointdata[i] = _byteData[_byteData.Count - 5 + i];
-            }
-            return int.Parse(SerialPortUtil.ByteToHex(_pointdata).Replace(" ", ""), NumberStyles.HexNumber);
-            //BitConverter.ToInt32(_pointdata, 0);
+            isRealTime = false;
         }
 
         public override string GetSendDataCmd()
         {
             return "F8-00-00-01-01-54";
+        }
+
+        public override List<ComDataVO> AnalyzeComData(byte[] bytedata)
+        {
+            List<ComDataVO> lsData = new List<ComDataVO>();
+            if (bytedata.Length == 14)
+            {
+                int serialnumber = GetReceiveSerialNumber(bytedata);
+
+                if (isRealTime == false && serialnumber % 100 != 0)
+                {
+                    return lsData;
+                }
+
+                ComDataVO flowvo = new ComDataVO();
+                flowvo.TimeValue = (serialnumber).ToString();
+                flowvo.DataValue = GetFlowData(bytedata);
+                lsData.Add(flowvo);
+
+                ComDataVO densityvo = new ComDataVO();
+                densityvo.TimeValue = (serialnumber).ToString();
+                densityvo.DataValue = GetDensityData(bytedata);
+                lsData.Add(densityvo);
+            }                
+            return lsData;
+        }
+
+        private string GetFlowData(byte[] bytedata)
+        {
+            return (GetSomeDataFromReceiveData(bytedata, 9, 2) + 15 * System.DateTime.Now.Second).ToString();
+        }
+
+        private string GetDensityData(byte[] bytedata)
+        {
+            return (GetSomeDataFromReceiveData(bytedata, 11, 2)+10*System.DateTime.Now.Second).ToString();
         }
     }
 }
