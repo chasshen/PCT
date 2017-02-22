@@ -80,9 +80,9 @@ namespace PCT
 
         private List<ArrayList> InitWatchDataList()
         {
-            String[] lsSeries = getSensor();
+            int seriescount = getSensor().Length;
             List<ArrayList> rtn = new List<ArrayList>();
-            for (int i = 0; i < lsSeries.Length; i++)
+            for (int i = 0; i < seriescount; i++)
             {
                 ArrayList watchdata = new ArrayList();
                 rtn.Add(watchdata);
@@ -91,7 +91,14 @@ namespace PCT
         }
         private String[] getSensor()
         {
-            return cmbSensor.SelectedItem.ToString().Split('/');
+            //return cmbSensor.SelectedItem.ToString().Split('/');
+            int sensorcount = channel.GetChannelTestObjects().Count;
+            String[] sensors = new String[sensorcount];
+            for(int i = 0; i < sensorcount; i++)
+            {
+                sensors[i] = ((ChannelTestObjectVO)channel.GetChannelTestObjects()[i]).DisplayName;
+            }
+            return sensors;
         }
 
         #region Chart初始化
@@ -160,6 +167,21 @@ namespace PCT
         }        
 
         private void btnToZero_Click(object sender, EventArgs e)
+        {
+            int sensorcount = channel.GetChannelTestObjects().Count;
+            for(int i = 0; i < sensorcount; i++)
+            {
+                ArrayList testdata = lsWatchData[i];
+                if(testdata.Count > 0)
+                    channel.GetChannelTestObjects()[i].ZeroTestData = double.Parse(testdata[testdata.Count-1].ToString());
+            }
+            ZeroForm zf = new ZeroForm();
+            zf.SetChannel(channel);
+            zf.zeroSavedEvent += ZeroSavedEvent;
+            zf.ShowDialog();
+        }
+
+        private void ZeroSavedEvent(object send, ZeroEventArgs e)
         {
             //String[] lsSensor = getSensor();
             //for(int i = 0; i < lsSensor.Length; i++)

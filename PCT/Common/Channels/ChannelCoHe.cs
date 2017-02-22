@@ -20,14 +20,14 @@ namespace PCT.Common.Channels
             voCo.DisplayName = "CO";
             voCo.DataStart = 9;
             voCo.DataLength = 2;
-            base.testObjects.Add(voCo);
+            GetChannelTestObjects().Add(voCo);
 
             ChannelTestObjectVO voHe = new ChannelTestObjectVO();
             voHe.Name = "He";
             voHe.DisplayName = "He";
             voHe.DataStart = 11;
             voHe.DataLength = 2;
-            base.testObjects.Add(voHe);
+            GetChannelTestObjects().Add(voHe);
         }
         public override string GetSendDataCmd()
         {
@@ -46,11 +46,12 @@ namespace PCT.Common.Channels
                     return lsData;
                 }
 
-                foreach(ChannelTestObjectVO voTest in base.testObjects){
+                foreach(ChannelTestObjectVO voTest in GetChannelTestObjects())
+                {
                     ComDataVO voData = new ComDataVO();
                     voData.TimeValue = (serialnumber).ToString();
                     voData.DataValue = GetDataFromByte(bytedata, voTest);
-                    lsData.Add(voData);
+                    lsData.Add(voData);                    
                 }
             }
             return lsData;

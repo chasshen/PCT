@@ -11,5 +11,6 @@ namespace PCT.Common.Channels
         String GetSendDataCmd();
         String GetStandbyCmd();
         List<ComDataVO> AnalyzeComData(byte[] bytedata);
+        List<ChannelTestObjectVO> GetChannelTestObjects();
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PCT.Common;
+using PCT.UI;
 
 namespace PCT
 {
@@ -19,6 +20,7 @@ namespace PCT
             Application.SetCompatibleTextRenderingDefault(false);
             MainForm mainform = new MainForm();
             ComController controller = new ComController(mainform);
+            //ZeroForm form = new ZeroForm();
             Application.Run(mainform);
         }
     }

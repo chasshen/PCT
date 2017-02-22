@@ -11,7 +11,7 @@ namespace PCT.Common.Channels
 {
     class ChannelBase : IChannel
     {
-        public List<ChannelTestObjectVO> testObjects = new List<ChannelTestObjectVO>();
+        private List<ChannelTestObjectVO> testObjects = new List<ChannelTestObjectVO>();
         public ChannelBase()
         {
             InitTestObjects();
@@ -21,6 +21,11 @@ namespace PCT.Common.Channels
             
         }        
         public bool isRealTime { get; set; }
+
+        public List<ChannelTestObjectVO> GetChannelTestObjects()
+        {
+            return testObjects;
+        }
 
         public virtual List<ComDataVO> AnalyzeComData(byte[] bytedata)
         {
