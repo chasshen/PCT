@@ -11,12 +11,12 @@ using System.Windows.Forms;
 
 namespace PCT.UI
 {
-    public partial class ZeroForm : Form
+    public partial class GainForm : Form
     {
-        public delegate void ZeroEventHandler(Object send, ZeroEventArgs e);
-        public event ZeroEventHandler zeroSavedEvent = null;
+        public delegate void GainEventHandler(Object send, GainEventArgs e);
+        public event GainEventHandler gainSavedEvent = null;
         private IChannel channel;
-        public ZeroForm()
+        public GainForm()
         {
             InitializeComponent();            
         }
@@ -28,13 +28,13 @@ namespace PCT.UI
             dt.TableName = "dt1";
             dt.Columns.Add(new DataColumn("name"));
             dt.Columns.Add(new DataColumn("testdata"));
-            dt.Columns.Add(new DataColumn("zerodata"));
+            dt.Columns.Add(new DataColumn("gaindata"));
             foreach(ChannelTestObjectVO voTO in channel.GetChannelTestObjects())
             {
                 DataRow row = dt.NewRow();
                 row["name"] = voTO.DisplayName;
-                row["testdata"] = voTO.ZeroTestData;
-                row["zerodata"] = voTO.ZeroFixData;
+                row["testdata"] = voTO.GainTestData;
+                row["gaindata"] = voTO.GainFixData;
                 dt.Rows.Add(row);
             }
             ds.Tables.Add(dt);
@@ -56,15 +56,15 @@ namespace PCT.UI
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            ZeroEventArgs args = new ZeroEventArgs();
+            GainEventArgs args = new GainEventArgs();
             try
             {
                 int i = 0;
                 foreach (DataGridViewRow row in dgView.Rows)
                 {
-                    double zerodata = 0.00;
-                    double.TryParse(row.Cells[2].Value.ToString(), out zerodata);
-                    channel.GetChannelTestObjects()[i].ZeroFixData = zerodata;
+                    double gaindata = 0.00;
+                    double.TryParse(row.Cells[2].Value.ToString(), out gaindata);
+                    channel.GetChannelTestObjects()[i].GainFixData = gaindata;
                     i++;
                 }
                 args.isSuccess = true;
@@ -73,16 +73,16 @@ namespace PCT.UI
             {
                 
             }
-            if (zeroSavedEvent != null)
+            if (gainSavedEvent != null)
             {
-                zeroSavedEvent.Invoke(this, args);
+                gainSavedEvent.Invoke(this, args);
             }
             this.Close();
             this.Dispose();
         }
     }
 
-    public class ZeroEventArgs : EventArgs
+    public class GainEventArgs : EventArgs
     {
         public Boolean isSuccess = false;
     }

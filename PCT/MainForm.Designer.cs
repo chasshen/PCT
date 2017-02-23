@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menu2 = new System.Windows.Forms.ToolStripMenuItem();
             this.pnBtns = new System.Windows.Forms.Panel();
@@ -92,9 +92,11 @@
             this.btnExit.TabIndex = 4;
             this.btnExit.Text = "退出";
             this.btnExit.UseVisualStyleBackColor = true;
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
             // btnStop
             // 
+            this.btnStop.Enabled = false;
             this.btnStop.Location = new System.Drawing.Point(19, 216);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(75, 48);
@@ -105,15 +107,18 @@
             // 
             // btnAddMore
             // 
+            this.btnAddMore.Enabled = false;
             this.btnAddMore.Location = new System.Drawing.Point(19, 148);
             this.btnAddMore.Name = "btnAddMore";
             this.btnAddMore.Size = new System.Drawing.Size(75, 48);
             this.btnAddMore.TabIndex = 2;
             this.btnAddMore.Text = "增益";
             this.btnAddMore.UseVisualStyleBackColor = true;
+            this.btnAddMore.Click += new System.EventHandler(this.btnAddMore_Click);
             // 
             // btnToZero
             // 
+            this.btnToZero.Enabled = false;
             this.btnToZero.Location = new System.Drawing.Point(19, 81);
             this.btnToZero.Name = "btnToZero";
             this.btnToZero.Size = new System.Drawing.Size(75, 48);
@@ -153,32 +158,32 @@
             // 
             // chartLine
             // 
-            chartArea3.AxisX.Crossing = 0D;
-            chartArea3.AxisX.Interval = 1D;
-            chartArea3.AxisX.LineColor = System.Drawing.Color.Transparent;
-            chartArea3.AxisX.MajorGrid.LineWidth = 0;
-            chartArea3.AxisX.Maximum = 30D;
-            chartArea3.AxisX.Minimum = 0D;
-            chartArea3.AxisX.Title = "Time";
-            chartArea3.AxisY.Crossing = 0D;
-            chartArea3.AxisY.Interval = 100D;
-            chartArea3.AxisY.Maximum = 1000D;
-            chartArea3.AxisY.Minimum = 0D;
-            chartArea3.AxisY.Title = "digit";
-            chartArea3.Name = "ChartArea1";
-            this.chartLine.ChartAreas.Add(chartArea3);
+            chartArea2.AxisX.Crossing = 0D;
+            chartArea2.AxisX.Interval = 1D;
+            chartArea2.AxisX.LineColor = System.Drawing.Color.Transparent;
+            chartArea2.AxisX.MajorGrid.LineWidth = 0;
+            chartArea2.AxisX.Maximum = 30D;
+            chartArea2.AxisX.Minimum = 0D;
+            chartArea2.AxisX.Title = "Time";
+            chartArea2.AxisY.Crossing = 0D;
+            chartArea2.AxisY.Interval = 100D;
+            chartArea2.AxisY.Maximum = 1000D;
+            chartArea2.AxisY.Minimum = 0D;
+            chartArea2.AxisY.Title = "digit";
+            chartArea2.Name = "ChartArea1";
+            this.chartLine.ChartAreas.Add(chartArea2);
             this.chartLine.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            legend3.IsTextAutoFit = false;
-            legend3.Name = "Legend1";
-            this.chartLine.Legends.Add(legend3);
+            legend2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            legend2.IsTextAutoFit = false;
+            legend2.Name = "Legend1";
+            this.chartLine.Legends.Add(legend2);
             this.chartLine.Location = new System.Drawing.Point(0, 0);
             this.chartLine.Name = "chartLine";
-            series3.ChartArea = "ChartArea1";
-            series3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            series3.Legend = "Legend1";
-            series3.Name = "Series1";
-            this.chartLine.Series.Add(series3);
+            series2.ChartArea = "ChartArea1";
+            series2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.chartLine.Series.Add(series2);
             this.chartLine.Size = new System.Drawing.Size(960, 312);
             this.chartLine.TabIndex = 0;
             // 

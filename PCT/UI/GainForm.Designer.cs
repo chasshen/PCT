@@ -1,6 +1,6 @@
 ﻿namespace PCT.UI
 {
-    partial class ZeroForm
+    partial class GainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -60,7 +60,7 @@
             this.groupBox1.Size = new System.Drawing.Size(550, 234);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "零点校正";
+            this.groupBox1.Text = "增益校正";
             // 
             // dgView
             // 
@@ -117,14 +117,14 @@
             // 
             // colzerodata
             // 
-            this.colzerodata.DataPropertyName = "zerodata";
+            this.colzerodata.DataPropertyName = "gaindata";
             this.colzerodata.HeaderText = "参考值";
             this.colzerodata.MinimumWidth = 100;
             this.colzerodata.Name = "colzerodata";
             this.colzerodata.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.colzerodata.Width = 150;
             // 
-            // ZeroForm
+            // GainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -133,9 +133,9 @@
             this.Controls.Add(this.panel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "ZeroForm";
+            this.Name = "GainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "零点校正";
+            this.Text = "增益校正";
             this.panel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgView)).EndInit();

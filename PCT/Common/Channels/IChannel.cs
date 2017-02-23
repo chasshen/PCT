@@ -12,5 +12,6 @@ namespace PCT.Common.Channels
         String GetStandbyCmd();
         List<ComDataVO> AnalyzeComData(byte[] bytedata);
         List<ChannelTestObjectVO> GetChannelTestObjects();
+        String CalculateRealData(double realdigit, int testobjectindex);
     }
 }

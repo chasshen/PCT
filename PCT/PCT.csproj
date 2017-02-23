@@ -78,6 +78,12 @@
       <DependentUpon>ConfigForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\IView.cs" />
+    <Compile Include="UI\GainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\GainForm.Designer.cs">
+      <DependentUpon>GainForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\ZeroForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -98,6 +104,9 @@
     </Compile>
     <EmbeddedResource Include="UI\ConfigForm.resx">
       <DependentUpon>ConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\GainForm.resx">
+      <DependentUpon>GainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\ZeroForm.resx">
       <DependentUpon>ZeroForm.cs</DependentUpon>

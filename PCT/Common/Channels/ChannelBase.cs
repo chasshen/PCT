@@ -61,5 +61,10 @@ namespace PCT.Common.Channels
             }
             return int.Parse(ComController.Bytes2Hex(_bytetemp).Replace("-",""), NumberStyles.HexNumber);
         }
+
+        public virtual String CalculateRealData(double realdigit, int testobjectindex)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

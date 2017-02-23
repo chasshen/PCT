@@ -61,5 +61,14 @@ namespace PCT.Common.Channels
         {
             return (GetSomeDataFromReceiveData(bytedata, voTest.DataStart, voTest.DataLength) + voTest.DataStart * System.DateTime.Now.Second).ToString();
         }
+
+        public override String CalculateRealData(double realdigit, int testobjectindex)
+        {
+            ChannelTestObjectVO voTO = GetChannelTestObjects()[testobjectindex];
+            double gain = (voTO.GainFixData - voTO.ZeroFixData) / (voTO.GainTestData - voTO.ZeroTestData);
+            double offset = voTO.GainFixData - gain * voTO.GainTestData;
+            double realdata = gain * realdigit + offset;
+            return realdata.ToString("F2")+"%";
+        }
     }
 }

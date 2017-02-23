@@ -54,7 +54,8 @@ namespace PCT
                         ccvo.Databits, ccvo.StopBits, ccvo.Parity,
                         "None");
                     Byte[] bytes = ComController.Hex2Bytes(channel.GetSendDataCmd());
-                    controller.SendDataToCom(bytes);                    
+                    controller.SendDataToCom(bytes);
+                    ControlButtonState("begin");
                 }
                 else
                 {
@@ -164,6 +165,7 @@ namespace PCT
             Byte[] bytes = ComController.Hex2Bytes(channel.GetStandbyCmd());
             controller.SendDataToCom(bytes);
             controller.CloseSerialPort();
+            ControlButtonState("stop");
         }        
 
         private void btnToZero_Click(object sender, EventArgs e)
@@ -171,9 +173,11 @@ namespace PCT
             int sensorcount = channel.GetChannelTestObjects().Count;
             for(int i = 0; i < sensorcount; i++)
             {
-                ArrayList testdata = lsWatchData[i];
-                if(testdata.Count > 0)
-                    channel.GetChannelTestObjects()[i].ZeroTestData = double.Parse(testdata[testdata.Count-1].ToString());
+                if(lsWatchData[i].Count > 0)
+                {
+                    ComDataVO tempdata = (ComDataVO)lsWatchData[i][lsWatchData[i].Count - 1];
+                    channel.GetChannelTestObjects()[i].ZeroTestData = double.Parse(tempdata.DataValue);
+                }               
             }
             ZeroForm zf = new ZeroForm();
             zf.SetChannel(channel);
@@ -183,11 +187,7 @@ namespace PCT
 
         private void ZeroSavedEvent(object send, ZeroEventArgs e)
         {
-            //String[] lsSensor = getSensor();
-            //for(int i = 0; i < lsSensor.Length; i++)
-            //{
-            //    chartLine.Series[i].Name = lsSensor[i] + "：" + lsWatchData[i][(lsWatchData[i]).Count - 1].ToString() + "digits";
-            //}
+            backgroundWorker1.RunWorkerAsync();
         }
 
         public void SetController(ComController controller)
@@ -251,16 +251,76 @@ namespace PCT
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            String[] lsSensor = getSensor();
             for (int i = 0; i < lsWatchData.Count; i++)
             {
+                string tempdigit = "";
                 chartLine.Series[i].Points.Clear();
                 int countdata = lsWatchData[i].Count;
                 for (int j = 0; j < countdata; j++)
                 {
                     ComDataVO tempdata = (ComDataVO)lsWatchData[i][j];
                     chartLine.Series[i].Points.AddXY(j, tempdata.DataValue);
+                    tempdigit = tempdata.DataValue;
+                }
+                string temprealdata = "";
+                if (channel.GetChannelTestObjects()[i].GainFixData > 0)
+                {                    
+                    double realdigit = 0.00;
+                    double.TryParse(tempdigit, out realdigit);
+                    temprealdata = channel.CalculateRealData(realdigit, i);                    
+                }
+                chartLine.Series[i].Name = lsSensor[i] + ":  " + tempdigit + "digits   " + temprealdata;
+            }
+        }
+
+        private void btnAddMore_Click(object sender, EventArgs e)
+        {
+            int sensorcount = channel.GetChannelTestObjects().Count;
+            for (int i = 0; i < sensorcount; i++)
+            {
+                if (lsWatchData[i].Count > 0)
+                {
+                    ComDataVO tempdata = (ComDataVO)lsWatchData[i][lsWatchData[i].Count - 1];
+                    channel.GetChannelTestObjects()[i].GainTestData = double.Parse(tempdata.DataValue);
                 }
             }
+            GainForm zf = new GainForm();
+            zf.SetChannel(channel);
+            zf.gainSavedEvent += GainSavedEvent;
+            zf.ShowDialog();
+        }
+
+        private void GainSavedEvent(object send, GainEventArgs e)
+        {
+            backgroundWorker1.RunWorkerAsync();
+        }
+
+        private void ControlButtonState(String runstate)
+        {
+            switch (runstate.ToLower())
+            {
+                case "begin":
+                    btnStart.Enabled = false;
+                    btnToZero.Enabled = true;
+                    btnAddMore.Enabled = true;
+                    btnStop.Enabled = true;
+                    btnExit.Enabled = false;
+                    break;
+                case "stop":
+                    btnStart.Enabled = true;
+                    btnToZero.Enabled = false;
+                    btnAddMore.Enabled = false;
+                    btnStop.Enabled = false;
+                    btnExit.Enabled = true;
+                    break;
+            }
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            controller.CloseSerialPort();
+            Application.Exit();
         }
     }
 }

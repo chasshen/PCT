@@ -40,5 +40,8 @@ namespace PCT.Common.Channels
             get { return gaindata[1]; }
             set { gaindata[1] = value; }
         }
+        //真实数据
+        public double RealGainData { get; set; }
+        public double RealZeroData { get; set; }
     }
 }
