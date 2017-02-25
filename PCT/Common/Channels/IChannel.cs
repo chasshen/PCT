@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static PCT.Common.Channels.ChannelType;
 
 namespace PCT.Common.Channels
 {
@@ -13,5 +14,8 @@ namespace PCT.Common.Channels
         List<ComDataVO> AnalyzeComData(byte[] bytedata);
         List<ChannelTestObjectVO> GetChannelTestObjects();
         String CalculateRealData(double realdigit, int testobjectindex);
+        bool isSpecial();
+        String GetCurSpecialCmd();
+        ChannelCheckType GetCheckType();
     }
 }

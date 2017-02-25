@@ -13,6 +13,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 using System.Collections;
 using PCT.Common;
 using PCT.Common.Channels;
+using static PCT.Common.Channels.ChannelType;
 
 namespace PCT
 {
@@ -112,6 +113,7 @@ namespace PCT
                 Series se = CreateSeries(i, lsSeries[i]);             
                 chartLine.Series.Add(se);
             }
+            chartLine.ChartAreas[0].AxisY.Maximum = 10;
         }
         private Series CreateSeries(int i, string seriename)
         {
@@ -232,7 +234,14 @@ namespace PCT
             if(receivedata.Count>0)
             {
                 AddPointData(receivedata);
-            }            
+            }
+            else
+            {
+                if (channel.isSpecial())
+                {
+                    controller.SendDataToCom(ComController.Hex2Bytes(channel.GetCurSpecialCmd()));
+                }
+            }
 
             System.IO.StreamWriter sw = new System.IO.StreamWriter("d:\\sc66.txt", true);
             sw.WriteLine(string.Format("{0}\t{1}\t【{2}】", System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss fff")
@@ -257,20 +266,30 @@ namespace PCT
                 string tempdigit = "";
                 chartLine.Series[i].Points.Clear();
                 int countdata = lsWatchData[i].Count;
+                //画点
                 for (int j = 0; j < countdata; j++)
                 {
                     ComDataVO tempdata = (ComDataVO)lsWatchData[i][j];
+                    double maxy = 1000;
+                    double.TryParse(tempdata.DataValue, out maxy);
+                    maxy = maxy * 2;
+                    if (chartLine.ChartAreas[0].AxisY.Maximum < maxy)
+                    {
+                        chartLine.ChartAreas[0].AxisY.Maximum = maxy ;
+                    }                    
                     chartLine.Series[i].Points.AddXY(j, tempdata.DataValue);
                     tempdigit = tempdata.DataValue;
                 }
+                //改示例文字
                 string temprealdata = "";
-                if (channel.GetChannelTestObjects()[i].GainFixData > 0)
+                if ((channel.GetCheckType()==ChannelCheckType.Gain && channel.GetChannelTestObjects()[i].GainFixData > 0) ||
+                    (channel.GetCheckType() == ChannelCheckType.Offset && channel.GetChannelTestObjects()[i].ZeroFixData > 0))
                 {                    
                     double realdigit = 0.00;
                     double.TryParse(tempdigit, out realdigit);
                     temprealdata = channel.CalculateRealData(realdigit, i);                    
                 }
-                chartLine.Series[i].Name = lsSensor[i] + ":  " + tempdigit + "digits   " + temprealdata;
+                chartLine.Series[i].Name = lsSensor[i] + ":  " + tempdigit + channel.GetChannelTestObjects()[i].Units + "   " + temprealdata;
             }
         }
 
@@ -321,6 +340,11 @@ namespace PCT
         {
             controller.CloseSerialPort();
             Application.Exit();
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            controller.CloseSerialPort();
         }
     }
 }

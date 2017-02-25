@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menu2 = new System.Windows.Forms.ToolStripMenuItem();
             this.pnBtns = new System.Windows.Forms.Panel();
@@ -158,32 +158,30 @@
             // 
             // chartLine
             // 
-            chartArea2.AxisX.Crossing = 0D;
-            chartArea2.AxisX.Interval = 1D;
-            chartArea2.AxisX.LineColor = System.Drawing.Color.Transparent;
-            chartArea2.AxisX.MajorGrid.LineWidth = 0;
-            chartArea2.AxisX.Maximum = 30D;
-            chartArea2.AxisX.Minimum = 0D;
-            chartArea2.AxisX.Title = "Time";
-            chartArea2.AxisY.Crossing = 0D;
-            chartArea2.AxisY.Interval = 100D;
-            chartArea2.AxisY.Maximum = 1000D;
-            chartArea2.AxisY.Minimum = 0D;
-            chartArea2.AxisY.Title = "digit";
-            chartArea2.Name = "ChartArea1";
-            this.chartLine.ChartAreas.Add(chartArea2);
+            chartArea1.AxisX.Crossing = 0D;
+            chartArea1.AxisX.Interval = 1D;
+            chartArea1.AxisX.LineColor = System.Drawing.Color.Transparent;
+            chartArea1.AxisX.MajorGrid.LineWidth = 0;
+            chartArea1.AxisX.Maximum = 30D;
+            chartArea1.AxisX.Minimum = 0D;
+            chartArea1.AxisX.Title = "Time";
+            chartArea1.AxisY.Crossing = 0D;
+            chartArea1.AxisY.Maximum = 1000D;
+            chartArea1.AxisY.Minimum = 0D;
+            chartArea1.Name = "ChartArea1";
+            this.chartLine.ChartAreas.Add(chartArea1);
             this.chartLine.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            legend2.IsTextAutoFit = false;
-            legend2.Name = "Legend1";
-            this.chartLine.Legends.Add(legend2);
+            legend1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            legend1.IsTextAutoFit = false;
+            legend1.Name = "Legend1";
+            this.chartLine.Legends.Add(legend1);
             this.chartLine.Location = new System.Drawing.Point(0, 0);
             this.chartLine.Name = "chartLine";
-            series2.ChartArea = "ChartArea1";
-            series2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chartLine.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chartLine.Series.Add(series1);
             this.chartLine.Size = new System.Drawing.Size(960, 312);
             this.chartLine.TabIndex = 0;
             // 
@@ -239,6 +237,7 @@
             this.Name = "MainForm";
             this.Text = "PowerCube-Tools";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.pnBtns.ResumeLayout(false);

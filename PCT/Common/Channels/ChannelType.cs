@@ -19,6 +19,13 @@ namespace PCT.Common.Channels
             Ambient
         }
 
+        public enum ChannelCheckType
+        {
+            None,
+            Offset,
+            Gain
+        }
+
         private static Hashtable channeltype = null;
         //private static Hashtable channeltestobjects = null;
         public ChannelType()

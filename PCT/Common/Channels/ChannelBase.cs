@@ -6,6 +6,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static PCT.Common.Channels.ChannelType;
 
 namespace PCT.Common.Channels
 {
@@ -18,9 +19,28 @@ namespace PCT.Common.Channels
         }
         protected virtual void InitTestObjects()
         {
-            
+            throw new NotImplementedException();
         }        
         public bool isRealTime { get; set; }
+
+        protected String SpecialCmd { get; set; }
+
+        public bool isSpecial()
+        {
+            return null != SpecialCmd && SpecialCmd.Equals("") == false ? true : false;
+        }
+        public String GetCurSpecialCmd()
+        {
+            string cmd = SpecialCmd;
+            //指令执行过就清除
+            SpecialCmd = "";
+            return cmd;
+        }
+
+        public virtual ChannelCheckType GetCheckType()
+        {
+            return ChannelCheckType.Gain;
+        }
 
         public List<ChannelTestObjectVO> GetChannelTestObjects()
         {
@@ -29,12 +49,35 @@ namespace PCT.Common.Channels
 
         public virtual List<ComDataVO> AnalyzeComData(byte[] bytedata)
         {
-            return null;
+            List<ComDataVO> lsData = new List<ComDataVO>();
+            if (bytedata.Length > 6)
+            {
+                int serialnumber = GetReceiveSerialNumber(bytedata);
+
+                if (isRealTime == false && serialnumber % 100 != 0)
+                {
+                    return lsData;
+                }
+
+                foreach (ChannelTestObjectVO voTest in GetChannelTestObjects())
+                {
+                    ComDataVO voData = new ComDataVO();
+                    voData.TimeValue = (serialnumber).ToString();
+                    voData.DataValue = GetDataFromByte(bytedata, voTest);
+                    lsData.Add(voData);
+                }
+            }
+            return lsData;
+        }
+
+        public virtual string GetDataFromByte(byte[] bytedata, ChannelTestObjectVO voTest)
+        {
+            return GetSomeDataFromReceiveData(bytedata, voTest.DataStart, voTest.DataLength).ToString();
         }
 
         public virtual string GetSendDataCmd()
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         public virtual string GetStandbyCmd()
@@ -64,7 +107,11 @@ namespace PCT.Common.Channels
 
         public virtual String CalculateRealData(double realdigit, int testobjectindex)
         {
-            throw new NotImplementedException();
+            ChannelTestObjectVO voTO = GetChannelTestObjects()[testobjectindex];
+            double gain = (voTO.GainFixData - voTO.ZeroFixData) / (voTO.GainTestData - voTO.ZeroTestData);
+            double offset = voTO.GainFixData - gain * voTO.GainTestData;
+            double realdata = gain * realdigit + offset;
+            return realdata.ToString("F2") + "%";
         }
     }
 }

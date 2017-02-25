@@ -20,6 +20,7 @@ namespace PCT.Common.Channels
             voCo.DisplayName = "CO";
             voCo.DataStart = 9;
             voCo.DataLength = 2;
+            voCo.Units = "digits";
             GetChannelTestObjects().Add(voCo);
 
             ChannelTestObjectVO voHe = new ChannelTestObjectVO();
@@ -27,6 +28,7 @@ namespace PCT.Common.Channels
             voHe.DisplayName = "He";
             voHe.DataStart = 11;
             voHe.DataLength = 2;
+            voHe.Units = "digits";
             GetChannelTestObjects().Add(voHe);
         }
         public override string GetSendDataCmd()
@@ -57,9 +59,10 @@ namespace PCT.Common.Channels
             return lsData;
         }
 
-        private string GetDataFromByte(byte[] bytedata, ChannelTestObjectVO voTest)
+        public override string GetDataFromByte(byte[] bytedata, ChannelTestObjectVO voTest)
         {
-            return (GetSomeDataFromReceiveData(bytedata, voTest.DataStart, voTest.DataLength) + voTest.DataStart * System.DateTime.Now.Second).ToString();
+            //return (GetSomeDataFromReceiveData(bytedata, voTest.DataStart, voTest.DataLength) + voTest.DataStart * System.DateTime.Now.Second).ToString();
+            return GetSomeDataFromReceiveData(bytedata, voTest.DataStart, voTest.DataLength).ToString();
         }
 
         public override String CalculateRealData(double realdigit, int testobjectindex)

@@ -16,6 +16,7 @@ namespace PCT.Common.Channels
         public string DisplayName { get; set; }
         public int DataStart { get; set; }
         public int DataLength { get; set; }
+        public string Units { get; set; }
         //零点数据
         private double[] zerodata = new double[2] { 0.00, 0.00 };
         public double ZeroTestData
@@ -41,7 +42,7 @@ namespace PCT.Common.Channels
             set { gaindata[1] = value; }
         }
         //真实数据
-        public double RealGainData { get; set; }
-        public double RealZeroData { get; set; }
+        //public double RealGainData { get; set; }
+        //public double RealZeroData { get; set; }
     }
 }

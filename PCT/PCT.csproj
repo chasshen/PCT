@@ -51,9 +51,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Channels\ChannelAmbient.cs" />
     <Compile Include="Common\Channels\ChannelBase.cs" />
+    <Compile Include="Common\Channels\ChannelCoCh4C2h2.cs" />
     <Compile Include="Common\Channels\ChannelCoHe.cs" />
     <Compile Include="Common\Channels\ChannelFlow.cs" />
+    <Compile Include="Common\Channels\ChannelO2Co2.cs" />
+    <Compile Include="Common\Channels\ChannelPb.cs" />
+    <Compile Include="Common\Channels\ChannelPm.cs" />
     <Compile Include="Common\Channels\ChannelTestObjectVO.cs" />
     <Compile Include="Common\Channels\ComDataVO.cs" />
     <Compile Include="Common\Channels\ChannelFactory.cs" />
