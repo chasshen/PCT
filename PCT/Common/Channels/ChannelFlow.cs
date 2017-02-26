@@ -38,12 +38,12 @@ namespace PCT.Common.Channels
 
                 ComDataVO flowvo = new ComDataVO();
                 flowvo.TimeValue = (serialnumber).ToString();
-                flowvo.DataValue = GetFlowData(bytedata);
+                flowvo.DataValue = double.Parse(GetFlowData(bytedata));
                 lsData.Add(flowvo);
 
                 ComDataVO densityvo = new ComDataVO();
                 densityvo.TimeValue = (serialnumber).ToString();
-                densityvo.DataValue = GetDensityData(bytedata);
+                densityvo.DataValue = double.Parse(GetFlowData(bytedata));
                 lsData.Add(densityvo);
             }                
             return lsData;

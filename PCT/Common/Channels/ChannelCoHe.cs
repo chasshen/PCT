@@ -36,27 +36,55 @@ namespace PCT.Common.Channels
             return "F8-00-00-01-01-54";
         }
 
+        //private int datacount = 0;
+        //private List<ComDataVO> lsData = new List<ComDataVO>();
         public override List<ComDataVO> AnalyzeComData(byte[] bytedata)
-        {
-            List<ComDataVO> lsData = new List<ComDataVO>();
+        {            
             if (bytedata.Length == 14)
             {
-                int serialnumber = GetReceiveSerialNumber(bytedata);
-
-                if (isRealTime == false && serialnumber % 100 != 0)
+                if (datacount == 100)
                 {
-                    return lsData;
+                    datacount = 0;
+                    lsData = new List<ComDataVO>();
                 }
-
-                foreach(ChannelTestObjectVO voTest in GetChannelTestObjects())
+                datacount++;
+                int serialnumber = GetReceiveSerialNumber(bytedata);
+                //if (isRealTime == false && serialnumber % 100 != 0)
+                //{
+                //    return lsData;
+                //}
+                //foreach(ChannelTestObjectVO voTest in GetChannelTestObjects())
+                //{
+                //    ComDataVO voData = new ComDataVO();
+                //    voData.TimeValue = (serialnumber).ToString();
+                //    voData.DataValue = GetDataFromByte(bytedata, voTest);
+                //    lsData.Add(voData);                    
+                //}
+                for(int i=0;i< GetChannelTestObjects().Count; i++)
                 {
-                    ComDataVO voData = new ComDataVO();
-                    voData.TimeValue = (serialnumber).ToString();
-                    voData.DataValue = GetDataFromByte(bytedata, voTest);
-                    lsData.Add(voData);                    
+                    ChannelTestObjectVO voTest = GetChannelTestObjects()[i];
+                    if (lsData.Count == GetChannelTestObjects().Count)
+                    {
+                        lsData[i].DataValue += double.Parse(GetDataFromByte(bytedata, voTest));
+                    }
+                    else
+                    {
+                        ComDataVO voData = new ComDataVO();
+                        voData.TimeValue = (serialnumber).ToString();
+                        voData.DataValue = double.Parse(GetDataFromByte(bytedata, voTest));
+                        lsData.Add(voData);
+                    }
                 }
             }
-            return lsData;
+            if(datacount == 100)
+            {
+                for(int i = 0; i < lsData.Count; i++)
+                {
+                    lsData[i].DataValue = lsData[i].DataValue / 100;
+                }
+                return lsData;
+            }
+            return new List<ComDataVO>();
         }
 
         public override string GetDataFromByte(byte[] bytedata, ChannelTestObjectVO voTest)

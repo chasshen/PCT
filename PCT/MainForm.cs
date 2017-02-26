@@ -178,7 +178,7 @@ namespace PCT
                 if(lsWatchData[i].Count > 0)
                 {
                     ComDataVO tempdata = (ComDataVO)lsWatchData[i][lsWatchData[i].Count - 1];
-                    channel.GetChannelTestObjects()[i].ZeroTestData = double.Parse(tempdata.DataValue);
+                    channel.GetChannelTestObjects()[i].ZeroTestData = tempdata.DataValue;
                 }               
             }
             ZeroForm zf = new ZeroForm();
@@ -270,15 +270,15 @@ namespace PCT
                 for (int j = 0; j < countdata; j++)
                 {
                     ComDataVO tempdata = (ComDataVO)lsWatchData[i][j];
-                    double maxy = 1000;
-                    double.TryParse(tempdata.DataValue, out maxy);
+                    double maxy = tempdata.DataValue;
+                    //double.TryParse(tempdata.DataValue, out maxy);
                     maxy = maxy * 2;
                     if (chartLine.ChartAreas[0].AxisY.Maximum < maxy)
                     {
                         chartLine.ChartAreas[0].AxisY.Maximum = maxy ;
                     }                    
                     chartLine.Series[i].Points.AddXY(j, tempdata.DataValue);
-                    tempdigit = tempdata.DataValue;
+                    tempdigit = tempdata.DataValue.ToString();
                 }
                 //改示例文字
                 string temprealdata = "";
@@ -301,7 +301,7 @@ namespace PCT
                 if (lsWatchData[i].Count > 0)
                 {
                     ComDataVO tempdata = (ComDataVO)lsWatchData[i][lsWatchData[i].Count - 1];
-                    channel.GetChannelTestObjects()[i].GainTestData = double.Parse(tempdata.DataValue);
+                    channel.GetChannelTestObjects()[i].GainTestData = tempdata.DataValue;
                 }
             }
             GainForm zf = new GainForm();

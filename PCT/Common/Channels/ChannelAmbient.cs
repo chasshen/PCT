@@ -63,7 +63,7 @@ namespace PCT.Common.Channels
                     int tempdata = GetSomeDataFromReceiveData(bytedata, voTest.DataStart, voTest.DataLength);
                     ComDataVO voData = new ComDataVO();
                     voData.TimeValue = "1";
-                    voData.DataValue = (double.Parse(tempdata.ToString()) /100).ToString("F2");
+                    voData.DataValue = double.Parse(tempdata.ToString()) /100;
                     lsData.Add(voData);
                 }
                 //装载气压指令
@@ -75,7 +75,7 @@ namespace PCT.Common.Channels
                 int tempdata = GetSomeDataFromReceiveData(bytedata, voTest.DataStart, voTest.DataLength);
                 ComDataVO voData = new ComDataVO();
                 voData.TimeValue = "1";
-                voData.DataValue = (double.Parse(tempdata.ToString()) / 10).ToString("F2");
+                voData.DataValue = double.Parse(tempdata.ToString()) / 10;
                 lsData.Add(voData);
             }
             if(lsData.Count == 3)

@@ -14,7 +14,7 @@ namespace PCT.Common.Channels
         }
 
         public String TimeValue { get; set; }
-        public String DataValue { get; set; }
+        public Double DataValue { get; set; }
 
     }
 }

@@ -31,23 +31,40 @@ namespace PCT.Common.Channels
             List<ComDataVO> lsData = new List<ComDataVO>();
             if (bytedata.Length > 6)
             {
-                int serialnumber = GetReceiveSerialNumber(bytedata);
-
-                if (isRealTime == false && serialnumber % 100 != 0)
+                if (datacount == 100)
                 {
-                    return lsData;
+                    datacount = 0;
+                    lsData = new List<ComDataVO>();
                 }
-
-                foreach (ChannelTestObjectVO voTest in GetChannelTestObjects())
+                datacount++;
+                int serialnumber = GetReceiveSerialNumber(bytedata);
+                for (int i = 0; i < GetChannelTestObjects().Count; i++)
                 {
+                    ChannelTestObjectVO voTest = GetChannelTestObjects()[i];
                     int tempdata = GetSomeDataFromReceiveData(bytedata, voTest.DataStart, voTest.DataLength);
-                    ComDataVO voData = new ComDataVO();
-                    voData.TimeValue = (serialnumber).ToString();
-                    voData.DataValue = ((tempdata - 1638) * 50 / 13107 - 25).ToString();
-                    lsData.Add(voData);
+                    double temprealdata = double.Parse(((tempdata - 1638) * 50 / 13107 - 25).ToString());
+                    if (lsData.Count == GetChannelTestObjects().Count)
+                    {
+                        lsData[i].DataValue += temprealdata;
+                    }
+                    else
+                    {
+                        ComDataVO voData = new ComDataVO();
+                        voData.TimeValue = (serialnumber).ToString();
+                        voData.DataValue = temprealdata;
+                        lsData.Add(voData);
+                    }
                 }
             }
-            return lsData;
+            if (datacount == 100)
+            {
+                for (int i = 0; i < lsData.Count; i++)
+                {
+                    lsData[i].DataValue = lsData[i].DataValue / 100;
+                }
+                return lsData;
+            }
+            return new List<ComDataVO>();
         }
     }
 }

@@ -47,27 +47,53 @@ namespace PCT.Common.Channels
             return testObjects;
         }
 
+        protected int datacount = 0;
+        protected List<ComDataVO> lsData = new List<ComDataVO>();
         public virtual List<ComDataVO> AnalyzeComData(byte[] bytedata)
         {
-            List<ComDataVO> lsData = new List<ComDataVO>();
             if (bytedata.Length > 6)
             {
-                int serialnumber = GetReceiveSerialNumber(bytedata);
-
-                if (isRealTime == false && serialnumber % 100 != 0)
+                if (datacount == 100)
                 {
-                    return lsData;
+                    datacount = 0;
+                    lsData = new List<ComDataVO>();
                 }
-
-                foreach (ChannelTestObjectVO voTest in GetChannelTestObjects())
+                datacount++;
+                int serialnumber = GetReceiveSerialNumber(bytedata);
+                //foreach (ChannelTestObjectVO voTest in GetChannelTestObjects())
+                //{
+                //    ComDataVO voData = new ComDataVO();
+                //    voData.TimeValue = (serialnumber).ToString();
+                //    voData.DataValue = double.Parse(GetDataFromByte(bytedata, voTest));
+                //    lsData.Add(voData);
+                //}
+                for (int i = 0; i < GetChannelTestObjects().Count; i++)
                 {
-                    ComDataVO voData = new ComDataVO();
-                    voData.TimeValue = (serialnumber).ToString();
-                    voData.DataValue = GetDataFromByte(bytedata, voTest);
-                    lsData.Add(voData);
+                    ChannelTestObjectVO voTest = GetChannelTestObjects()[i];
+                    double temprealdata = double.Parse(GetDataFromByte(bytedata, voTest));
+                    if (lsData.Count == GetChannelTestObjects().Count)
+                    {
+                        lsData[i].DataValue += temprealdata;
+                    }
+                    else
+                    {
+                        ComDataVO voData = new ComDataVO();
+                        voData.TimeValue = (serialnumber).ToString();
+                        voData.DataValue = temprealdata;
+                        lsData.Add(voData);
+                    }
                 }
             }
-            return lsData;
+            if (datacount == 100)
+            {
+                for (int i = 0; i < lsData.Count; i++)
+                {
+                    lsData[i].DataValue = lsData[i].DataValue / 100;
+                }
+                return lsData;
+            }
+            return new List<ComDataVO>();
+            //return lsData;
         }
 
         public virtual string GetDataFromByte(byte[] bytedata, ChannelTestObjectVO voTest)
