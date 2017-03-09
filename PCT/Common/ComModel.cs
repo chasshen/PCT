@@ -134,9 +134,10 @@ namespace PCT.Common
                 sp.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
                 args.isOpend = true;
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
                 args.isOpend = false;
+                LogHelper.writelog("打开com口出错。"+e.Message);
             }
             if (comOpenEvent != null)
             {

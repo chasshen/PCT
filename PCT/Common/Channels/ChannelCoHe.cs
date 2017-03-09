@@ -18,7 +18,7 @@ namespace PCT.Common.Channels
             ChannelTestObjectVO voCo = new ChannelTestObjectVO();
             voCo.Name = "CO";
             voCo.DisplayName = "CO";
-            voCo.DataStart = 9;
+            voCo.DataStart = 19;
             voCo.DataLength = 2;
             voCo.Units = "digits";
             GetChannelTestObjects().Add(voCo);
@@ -26,21 +26,19 @@ namespace PCT.Common.Channels
             ChannelTestObjectVO voHe = new ChannelTestObjectVO();
             voHe.Name = "He";
             voHe.DisplayName = "He";
-            voHe.DataStart = 11;
+            voHe.DataStart = 17;
             voHe.DataLength = 2;
             voHe.Units = "digits";
             GetChannelTestObjects().Add(voHe);
         }
         public override string GetSendDataCmd()
         {
-            return "F8-00-00-01-01-54";
+            return "F8-00-00-00-09-54";
         }
 
-        //private int datacount = 0;
-        //private List<ComDataVO> lsData = new List<ComDataVO>();
         public override List<ComDataVO> AnalyzeComData(byte[] bytedata)
         {            
-            if (bytedata.Length == 14)
+            if (bytedata.Length == 24)
             {
                 if (datacount == 100)
                 {
@@ -49,17 +47,6 @@ namespace PCT.Common.Channels
                 }
                 datacount++;
                 int serialnumber = GetReceiveSerialNumber(bytedata);
-                //if (isRealTime == false && serialnumber % 100 != 0)
-                //{
-                //    return lsData;
-                //}
-                //foreach(ChannelTestObjectVO voTest in GetChannelTestObjects())
-                //{
-                //    ComDataVO voData = new ComDataVO();
-                //    voData.TimeValue = (serialnumber).ToString();
-                //    voData.DataValue = GetDataFromByte(bytedata, voTest);
-                //    lsData.Add(voData);                    
-                //}
                 for(int i=0;i< GetChannelTestObjects().Count; i++)
                 {
                     ChannelTestObjectVO voTest = GetChannelTestObjects()[i];

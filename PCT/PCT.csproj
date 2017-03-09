@@ -64,6 +64,7 @@
     <Compile Include="Common\ComConfigVO.cs" />
     <Compile Include="Common\ComModel.cs" />
     <Compile Include="Common\ComController.cs" />
+    <Compile Include="Common\LogHelper.cs" />
     <Compile Include="Common\SerialPortUtil.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

@@ -246,7 +246,7 @@ namespace PCT
             System.IO.StreamWriter sw = new System.IO.StreamWriter("d:\\sc66.txt", true);
             sw.WriteLine(string.Format("{0}\t{1}\t【{2}】", System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss fff")
                 , SerialPortUtil.ByteToHex(tempbytes)
-                , receivedata.Count==2 ? receivedata[0].TimeValue+"-"+ receivedata[0].DataValue + "-" + receivedata[1].TimeValue + "-" + receivedata[1].DataValue : receivedata.Count.ToString()));
+                , receivedata.Count == 2 ? receivedata[0].TimeValue + "-" + receivedata[0].DataValue + "-" + receivedata[1].TimeValue + "-" + receivedata[1].DataValue : receivedata.Count.ToString()));
             sw.Close();
         }
 
