@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ namespace PCT.Common.Channels
         public ChannelCoHe()
         {
             isRealTime = false;
+            onedataLength = 24;
         }
 
         protected override void InitTestObjects()
@@ -37,8 +39,26 @@ namespace PCT.Common.Channels
         }
 
         public override List<ComDataVO> AnalyzeComData(byte[] bytedata)
-        {            
-            if (bytedata.Length == 24)
+        {
+            byte[] copybytecache = null;
+            foreach (byte b in bytedata)
+            {
+                if (startread)
+                {
+                    bytecache.Add(b);
+                }
+                //从收到第一个54后开始处理数据，起到忽略命令回传数据的作用
+                if (startread == false && SerialPortUtil.HexToByte("54")[0] == b)   
+                {
+                    startread = true;
+                }
+                if(bytecache.Count == onedataLength)
+                {
+                    copybytecache = bytecache.ToArray();
+                    bytecache.Clear();
+                }
+            }
+            if (null != copybytecache && copybytecache.Length == onedataLength)
             {
                 if (datacount == 100)
                 {
@@ -46,19 +66,20 @@ namespace PCT.Common.Channels
                     lsData = new List<ComDataVO>();
                 }
                 datacount++;
-                int serialnumber = GetReceiveSerialNumber(bytedata);
+                int serialnumber = GetReceiveSerialNumber(copybytecache);
                 for(int i=0;i< GetChannelTestObjects().Count; i++)
                 {
                     ChannelTestObjectVO voTest = GetChannelTestObjects()[i];
+                    //当所有的测试项目都添加后，新数据进来就要和对应老数据做累加
                     if (lsData.Count == GetChannelTestObjects().Count)
                     {
-                        lsData[i].DataValue += double.Parse(GetDataFromByte(bytedata, voTest));
+                        lsData[i].DataValue += double.Parse(GetDataFromByte(copybytecache, voTest));
                     }
                     else
                     {
                         ComDataVO voData = new ComDataVO();
                         voData.TimeValue = (serialnumber).ToString();
-                        voData.DataValue = double.Parse(GetDataFromByte(bytedata, voTest));
+                        voData.DataValue = double.Parse(GetDataFromByte(copybytecache, voTest));
                         lsData.Add(voData);
                     }
                 }

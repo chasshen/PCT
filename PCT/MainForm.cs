@@ -167,6 +167,7 @@ namespace PCT
             Byte[] bytes = ComController.Hex2Bytes(channel.GetStandbyCmd());
             controller.SendDataToCom(bytes);
             controller.CloseSerialPort();
+            initChannel();
             ControlButtonState("stop");
         }        
 
@@ -252,7 +253,16 @@ namespace PCT
 
         private void cmbSensor_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(cmbSensor.SelectedIndex > -1)
+            //if(cmbSensor.SelectedIndex > -1)
+            //{
+            //    channel = ChannelFactory.CreateChannelInstance(channeltype.GetValueFromName(cmbSensor.SelectedItem.ToString()));
+            //}
+            initChannel();
+        }
+
+        private void initChannel()
+        {
+            if (cmbSensor.SelectedIndex > -1)
             {
                 channel = ChannelFactory.CreateChannelInstance(channeltype.GetValueFromName(cmbSensor.SelectedItem.ToString()));
             }

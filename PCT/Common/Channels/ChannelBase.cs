@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
@@ -20,7 +21,7 @@ namespace PCT.Common.Channels
         protected virtual void InitTestObjects()
         {
             throw new NotImplementedException();
-        }        
+        }
         public bool isRealTime { get; set; }
 
         protected String SpecialCmd { get; set; }
@@ -47,11 +48,32 @@ namespace PCT.Common.Channels
             return testObjects;
         }
 
+        protected int onedataLength { get; set; } //接收数据的位数
+        protected List<byte> bytecache = new List<byte>();
+        protected bool startread = false;
         protected int datacount = 0;
         protected List<ComDataVO> lsData = new List<ComDataVO>();
         public virtual List<ComDataVO> AnalyzeComData(byte[] bytedata)
         {
-            if (bytedata.Length > 6)
+            byte[] copybytecache = null;
+            foreach (byte b in bytedata)
+            {
+                if (startread)
+                {
+                    bytecache.Add(b);
+                }
+                //从收到第一个54后开始处理数据，起到忽略命令回传数据的作用
+                if (startread == false && SerialPortUtil.HexToByte("54")[0] == b)
+                {
+                    startread = true;
+                }
+                if (bytecache.Count == onedataLength)
+                {
+                    copybytecache = bytecache.ToArray();
+                    bytecache.Clear();
+                }
+            }
+            if (null != copybytecache && copybytecache.Length == onedataLength)
             {
                 if (datacount == 100)
                 {
@@ -59,18 +81,11 @@ namespace PCT.Common.Channels
                     lsData = new List<ComDataVO>();
                 }
                 datacount++;
-                int serialnumber = GetReceiveSerialNumber(bytedata);
-                //foreach (ChannelTestObjectVO voTest in GetChannelTestObjects())
-                //{
-                //    ComDataVO voData = new ComDataVO();
-                //    voData.TimeValue = (serialnumber).ToString();
-                //    voData.DataValue = double.Parse(GetDataFromByte(bytedata, voTest));
-                //    lsData.Add(voData);
-                //}
+                int serialnumber = GetReceiveSerialNumber(copybytecache);
                 for (int i = 0; i < GetChannelTestObjects().Count; i++)
                 {
                     ChannelTestObjectVO voTest = GetChannelTestObjects()[i];
-                    double temprealdata = double.Parse(GetDataFromByte(bytedata, voTest));
+                    double temprealdata = double.Parse(GetDataFromByte(copybytecache, voTest));
                     if (lsData.Count == GetChannelTestObjects().Count)
                     {
                         lsData[i].DataValue += temprealdata;
@@ -93,7 +108,6 @@ namespace PCT.Common.Channels
                 return lsData;
             }
             return new List<ComDataVO>();
-            //return lsData;
         }
 
         public virtual string GetDataFromByte(byte[] bytedata, ChannelTestObjectVO voTest)

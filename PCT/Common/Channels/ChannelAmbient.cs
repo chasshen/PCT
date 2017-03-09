@@ -12,6 +12,7 @@ namespace PCT.Common.Channels
         public ChannelAmbient()
         {
             isRealTime = false;
+            onedataLength = 10;
         }
         protected override void InitTestObjects()
         {
@@ -49,10 +50,28 @@ namespace PCT.Common.Channels
             return ChannelCheckType.Offset;
         }
 
-        private List<ComDataVO> lsData = new List<ComDataVO>();
+        //private List<ComDataVO> lsData = new List<ComDataVO>();
         public override List<ComDataVO> AnalyzeComData(byte[] bytedata)
         {
-            if (bytedata.Length == 10)
+            byte[] copybytecache = null;
+            foreach (byte b in bytedata)
+            {
+                if (startread)
+                {
+                    bytecache.Add(b);
+                }
+                //从收到第一个54后开始处理数据，起到忽略命令回传数据的作用
+                if (startread == false && SerialPortUtil.HexToByte("54")[0] == b)
+                {
+                    startread = true;
+                }
+                if (bytecache.Count == onedataLength)
+                {
+                    copybytecache = bytecache.ToArray();
+                    bytecache.Clear();
+                }
+            }
+            if (null != copybytecache && copybytecache.Length == 10)
             {
                 //接受温度、湿度数据时清空数据对象
                 lsData = new List<ComDataVO>();
@@ -60,7 +79,7 @@ namespace PCT.Common.Channels
                 foreach (int i in indexTO)
                 {
                     ChannelTestObjectVO voTest = GetChannelTestObjects()[i];
-                    int tempdata = GetSomeDataFromReceiveData(bytedata, voTest.DataStart, voTest.DataLength);
+                    int tempdata = GetSomeDataFromReceiveData(copybytecache, voTest.DataStart, voTest.DataLength);
                     ComDataVO voData = new ComDataVO();
                     voData.TimeValue = "1";
                     voData.DataValue = double.Parse(tempdata.ToString()) /100;
@@ -68,15 +87,18 @@ namespace PCT.Common.Channels
                 }
                 //装载气压指令
                 SpecialCmd = "F8-00-00-01-04-54";
+                onedataLength = 12;
             }
-            else if (bytedata.Length == 12)
+            else if (null != copybytecache && copybytecache.Length == 12)
             {
                 ChannelTestObjectVO voTest = GetChannelTestObjects()[2];
-                int tempdata = GetSomeDataFromReceiveData(bytedata, voTest.DataStart, voTest.DataLength);
+                int tempdata = GetSomeDataFromReceiveData(copybytecache, voTest.DataStart, voTest.DataLength);
                 ComDataVO voData = new ComDataVO();
                 voData.TimeValue = "1";
                 voData.DataValue = double.Parse(tempdata.ToString()) / 10;
                 lsData.Add(voData);
+                //改回温湿度数据长度
+                onedataLength = 10;
             }
             if(lsData.Count == 3)
             {

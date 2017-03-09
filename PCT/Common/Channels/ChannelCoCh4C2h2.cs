@@ -11,6 +11,7 @@ namespace PCT.Common.Channels
         public ChannelCoCh4C2h2()
         {
             isRealTime = false;
+            onedataLength = 26;
         }
 
         protected override void InitTestObjects()
