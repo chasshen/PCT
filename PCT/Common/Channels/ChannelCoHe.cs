@@ -35,7 +35,7 @@ namespace PCT.Common.Channels
         }
         public override string GetSendDataCmd()
         {
-            return "F8-00-00-00-09-54";
+            return "F8-03-00-02-09-54";
         }
 
         public override List<ComDataVO> AnalyzeComData(byte[] bytedata)

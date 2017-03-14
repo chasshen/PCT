@@ -43,7 +43,7 @@ namespace PCT.Common.Channels
 
         public override string GetSendDataCmd()
         {
-            return "F8-00-00-01-0A-54";
+            return "F8-03-00-02-0A-54";
         }
         
     }
