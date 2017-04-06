@@ -12,7 +12,7 @@ namespace PCT.Common.Channels
         public ChannelCoHe()
         {
             isRealTime = false;
-            onedataLength = 24;
+            onedataLength = 24;//11111
         }
 
         protected override void InitTestObjects()
