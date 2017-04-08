@@ -36,7 +36,7 @@ namespace PCT.Common.Channels
         public override string GetSendDataCmd()
         {
             return "F8-03-00-02-09-54";
-        }
+        }      
 
         public override List<ComDataVO> AnalyzeComData(byte[] bytedata)
         {
@@ -47,8 +47,8 @@ namespace PCT.Common.Channels
                 {
                     bytecache.Add(b);
                 }
-                //从收到第一个54后开始处理数据，起到忽略命令回传数据的作用
-                if (startread == false && SerialPortUtil.HexToByte("54")[0] == b)   
+                //从收到串口命令回传后开始处理数据，起到忽略命令回传数据的作用
+                if (startread == false && CheckCmdCallback(b))   
                 {
                     startread = true;
                 }

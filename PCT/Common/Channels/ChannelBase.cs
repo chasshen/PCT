@@ -53,6 +53,30 @@ namespace PCT.Common.Channels
         protected bool startread = false;
         protected int datacount = 0;
         protected List<ComDataVO> lsData = new List<ComDataVO>();
+        //存储当前channel的串口命令回传检测变量
+        protected int checkCmdindex = 0;
+        protected String[] checkCmdList = null;
+        //检测串口命令回传
+        protected bool CheckCmdCallback(byte thebyte)
+        {
+            if (null == checkCmdList)
+            {
+                checkCmdList = GetSendDataCmd().Split('-');
+            }
+            if (checkCmdList[checkCmdindex].Equals(SerialPortUtil.ByteToHex(new byte[] { thebyte })))
+            {
+                checkCmdindex++;
+                if (checkCmdindex == checkCmdList.Length)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                checkCmdindex = 0;
+            }
+            return false;
+        }
         public virtual List<ComDataVO> AnalyzeComData(byte[] bytedata)
         {
             byte[] copybytecache = null;
@@ -62,8 +86,8 @@ namespace PCT.Common.Channels
                 {
                     bytecache.Add(b);
                 }
-                //从收到第一个54后开始处理数据，起到忽略命令回传数据的作用
-                if (startread == false && SerialPortUtil.HexToByte("54")[0] == b)
+                //从收到串口命令回传后开始处理数据，起到忽略命令回传数据的作用
+                if (startread == false && CheckCmdCallback(b))
                 {
                     startread = true;
                 }
