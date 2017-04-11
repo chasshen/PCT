@@ -11,7 +11,7 @@ namespace PCT.Common.Channels
         public ChannelPb()
         {
             isRealTime = false;
-            onedataLength = 25;
+            onedataLength = 24;
         }
         protected override void InitTestObjects()
         {
@@ -25,7 +25,7 @@ namespace PCT.Common.Channels
         }
         public override string GetSendDataCmd()
         {
-            return "F8-00-00-01-05-54";
+            return "F8-00-00-02-05-54";
         }
         public override List<ComDataVO> AnalyzeComData(byte[] bytedata)
         {
@@ -34,7 +34,18 @@ namespace PCT.Common.Channels
             {
                 if (startread)
                 {
-                    bytecache.Add(b);
+                    if(bytecache.Count == 0)
+                    {
+                        if (b == 254)
+                        {
+                            bytecache.Add(b);
+                        }
+                    }
+                    else
+                    {
+                        bytecache.Add(b);
+                    }
+                    
                 }
                 //从收到串口命令回传后开始处理数据，起到忽略命令回传数据的作用
                 if (startread == false && CheckCmdCallback(b))
@@ -72,7 +83,17 @@ namespace PCT.Common.Channels
                         voData.DataValue = temprealdata;
                         lsData.Add(voData);
                     }
-                }
+                    if (null != ccvo.IsDebug && ccvo.IsDebug.Equals("1"))
+                    {
+                        System.IO.StreamWriter sw = new System.IO.StreamWriter("d:\\sc77.txt", true);
+                        sw.WriteLine(string.Format("{0}\t{1}\t{2}\t{3}", System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss fff")
+                            , SerialPortUtil.ByteToHex(copybytecache)
+                            , tempdata
+                            , temprealdata)
+                            );
+                        sw.Close();
+                    }
+                }                
             }
             if (datacount == 100)
             {

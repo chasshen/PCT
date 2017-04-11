@@ -39,5 +39,10 @@ namespace PCT.Common
         {
             get { return cfa.AppSettings.Settings["StopBits"].Value; }
         }
+
+        public String IsDebug
+        {
+            get { return cfa.AppSettings.Settings["IsDebug"].Value; }
+        }
     }
 }

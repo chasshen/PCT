@@ -19,6 +19,7 @@ namespace PCT
 {
     public partial class MainForm : Form, IView
     {
+        private ComConfigVO ccvo = new ComConfigVO();
         private ComController controller;
         private IChannel channel = null;
         private ChannelType channeltype = new ChannelType();
@@ -49,8 +50,7 @@ namespace PCT
                     //画线初始化
                     InitChart();
                     lsWatchData = InitWatchDataList();
-                    //com数据处理
-                    ComConfigVO ccvo = new ComConfigVO();
+                    //com数据处理                    
                     controller.OpenSerialPort(ccvo.Port, ccvo.BaudRates,
                         ccvo.Databits, ccvo.StopBits, ccvo.Parity,
                         "None");
@@ -243,12 +243,14 @@ namespace PCT
                     controller.SendDataToCom(ComController.Hex2Bytes(channel.GetCurSpecialCmd()));
                 }
             }
-
-            System.IO.StreamWriter sw = new System.IO.StreamWriter("d:\\sc66.txt", true);
-            sw.WriteLine(string.Format("{0}\t{1}\t【{2}】", System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss fff")
-                , SerialPortUtil.ByteToHex(tempbytes)
-                , receivedata.Count == 2 ? receivedata[0].TimeValue + "-" + receivedata[0].DataValue + "-" + receivedata[1].TimeValue + "-" + receivedata[1].DataValue : receivedata.Count.ToString()));
-            sw.Close();
+            if(null != ccvo.IsDebug && ccvo.IsDebug.Equals("1"))
+            {
+                System.IO.StreamWriter sw = new System.IO.StreamWriter("d:\\sc66.txt", true);
+                sw.WriteLine(string.Format("{0}\t{1}\t【{2}】", System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss fff")
+                    , SerialPortUtil.ByteToHex(tempbytes)
+                    , receivedata.Count == 2 ? receivedata[0].TimeValue + "-" + receivedata[0].DataValue + "-" + receivedata[1].TimeValue + "-" + receivedata[1].DataValue : receivedata.Count.ToString()));
+                sw.Close();
+            }
         }
 
         private void cmbSensor_SelectedIndexChanged(object sender, EventArgs e)
@@ -286,7 +288,11 @@ namespace PCT
                     if (chartLine.ChartAreas[0].AxisY.Maximum < maxy)
                     {
                         chartLine.ChartAreas[0].AxisY.Maximum = maxy ;
-                    }                    
+                    }
+                    if (chartLine.ChartAreas[0].AxisY.Minimum > maxy)
+                    {
+                        chartLine.ChartAreas[0].AxisY.Minimum = maxy;
+                    }
                     chartLine.Series[i].Points.AddXY(j, tempdata.DataValue);
                     tempdigit = tempdata.DataValue.ToString();
                 }

@@ -37,7 +37,7 @@ namespace PCT.Common.Channels
             voPressure.DisplayName = "气压";
             voPressure.DataStart = 5;
             voPressure.DataLength = 2;
-            voPressure.Units = "mbar";
+            voPressure.Units = "hPa";
             GetChannelTestObjects().Add(voPressure);
         }
         public override string GetSendDataCmd()
@@ -88,6 +88,7 @@ namespace PCT.Common.Channels
                 //装载气压指令
                 SpecialCmd = "F8-00-00-01-04-54";
                 onedataLength = 12;
+                startread = false;
             }
             else if (null != copybytecache && copybytecache.Length == 12)
             {
