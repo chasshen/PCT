@@ -80,6 +80,10 @@ namespace PCT.Common.Channels
         }
         public virtual List<ComDataVO> AnalyzeComData(byte[] bytedata)
         {
+            if (datacount == 0 && lsData.Count > 0)
+            {
+                lsData = new List<ComDataVO>();
+            }
             byte[] copybytecache = null;
             foreach (byte b in bytedata)
             {
@@ -110,11 +114,11 @@ namespace PCT.Common.Channels
             }
             if (null != copybytecache && copybytecache.Length == onedataLength)
             {
-                if (datacount == 100)
-                {
-                    datacount = 0;
-                    lsData = new List<ComDataVO>();
-                }
+                //if (datacount == 100)
+                //{
+                //    datacount = 0;
+                //    lsData = new List<ComDataVO>();
+                //}
                 datacount++;
                 int serialnumber = GetReceiveSerialNumber(copybytecache);
                 for (int i = 0; i < GetChannelTestObjects().Count; i++)
@@ -134,10 +138,11 @@ namespace PCT.Common.Channels
                     }
                     if (null != ccvo.IsDebug && ccvo.IsDebug.Equals("1"))
                     {
-                        System.IO.StreamWriter sw = new System.IO.StreamWriter("d:\\sc77.txt", true);
-                        sw.WriteLine(string.Format("{0}\t{1}\t{2}\t", System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss fff")
+                        System.IO.StreamWriter sw = new System.IO.StreamWriter(System.AppDomain.CurrentDomain.BaseDirectory + "sc77.txt", true);
+                        sw.WriteLine(string.Format("{0}\t{1}\t{2}\t{3}", System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss fff")
                             , SerialPortUtil.ByteToHex(copybytecache)
-                            , temprealdata)
+                            , double.Parse(GetDataFromByte(copybytecache, voTest))
+                            , datacount)
                             );
                         sw.Close();
                     }
@@ -149,6 +154,30 @@ namespace PCT.Common.Channels
                 {
                     lsData[i].DataValue = lsData[i].DataValue / 100;
                 }
+                if (null != ccvo.IsDebug && ccvo.IsDebug.Equals("1"))
+                {
+                    System.IO.StreamWriter sw8 = new System.IO.StreamWriter(System.AppDomain.CurrentDomain.BaseDirectory + "sc88.txt", true);
+                    if (lsData.Count == 2)
+                    {
+                        sw8.WriteLine(string.Format("{0}\t{1}\t{2}\t{3}"
+                                                , System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss fff")
+                                                , datacount
+                                                , lsData[0].DataValue
+                                                , lsData[1].DataValue)
+                        );
+                    }
+                    else
+                    {
+                        sw8.WriteLine(string.Format("{0}\t{1}\t{2}"
+                                                , System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss fff")
+                                                , datacount
+                                                , lsData.Count)
+                        );
+                    }
+
+                    sw8.Close();
+                }
+                datacount = 0;
                 return lsData;
             }
             return new List<ComDataVO>();

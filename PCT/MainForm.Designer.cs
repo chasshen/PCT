@@ -166,7 +166,7 @@
             chartArea1.AxisX.Minimum = 0D;
             chartArea1.AxisX.Title = "Time";
             chartArea1.AxisY.Crossing = 0D;
-            chartArea1.AxisY.Maximum = 1000D;
+            chartArea1.AxisY.Maximum = 1D;
             chartArea1.AxisY.Minimum = 0D;
             chartArea1.Name = "ChartArea1";
             this.chartLine.ChartAreas.Add(chartArea1);

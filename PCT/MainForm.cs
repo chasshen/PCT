@@ -245,7 +245,7 @@ namespace PCT
             }
             if(null != ccvo.IsDebug && ccvo.IsDebug.Equals("1"))
             {
-                System.IO.StreamWriter sw = new System.IO.StreamWriter("d:\\sc66.txt", true);
+                System.IO.StreamWriter sw = new System.IO.StreamWriter(System.AppDomain.CurrentDomain.BaseDirectory+"sc66.txt", true);
                 sw.WriteLine(string.Format("{0}\t{1}\t【{2}】", System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss fff")
                     , SerialPortUtil.ByteToHex(tempbytes)
                     , receivedata.Count == 2 ? receivedata[0].TimeValue + "-" + receivedata[0].DataValue + "-" + receivedata[1].TimeValue + "-" + receivedata[1].DataValue : receivedata.Count.ToString()));
@@ -298,8 +298,10 @@ namespace PCT
                 }
                 //改示例文字
                 string temprealdata = "";
-                if ((channel.GetCheckType()==ChannelCheckType.Gain && channel.GetChannelTestObjects()[i].GainFixData > 0) ||
-                    (channel.GetCheckType() == ChannelCheckType.Offset && channel.GetChannelTestObjects()[i].ZeroFixData > 0))
+                //if ((channel.GetCheckType()==ChannelCheckType.Gain && channel.GetChannelTestObjects()[i].GainFixData > 0) ||
+                //    (channel.GetCheckType() == ChannelCheckType.Offset && channel.GetChannelTestObjects()[i].ZeroFixData > 0))
+                if ((channel.GetCheckType() == ChannelCheckType.Gain ) ||
+                    (channel.GetCheckType() == ChannelCheckType.Offset ))
                 {                    
                     double realdigit = 0.00;
                     double.TryParse(tempdigit, out realdigit);
