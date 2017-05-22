@@ -155,7 +155,7 @@ namespace PCT.Common.Channels
             double gain = (voTO.GainFixData - voTO.ZeroFixData) / (voTO.GainTestData - voTO.ZeroTestData);
             double offset = voTO.GainFixData - gain * voTO.GainTestData;
             double realdata = gain * realdigit + offset;
-            return realdata.ToString("F2")+"%";
+            return realdata.ToString("F4")+"%";
         }
     }
 }
